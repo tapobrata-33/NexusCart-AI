@@ -275,3 +275,53 @@ st.caption(
 Business Intelligence & Sales Prediction Platform
 """
 )
+# ============================
+# CUSTOM UI STYLE
+# ============================
+
+st.markdown(
+"""
+<style>
+
+.main {
+    background-color: #f7f9fc;
+}
+
+
+h1 {
+    color: #0b3d91;
+    font-size: 45px;
+}
+
+
+h2 {
+    color: #14532d;
+}
+
+
+.stMetric {
+
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+
+}
+
+
+[data-testid="stSidebar"] {
+
+    background-color: #0b3d91;
+
+}
+
+
+[data-testid="stSidebar"] * {
+
+    color: white;
+
+}
+
+</style>
+""",
+unsafe_allow_html=True
+)
