@@ -14,57 +14,6 @@ st.set_page_config(
     layout="wide"
 )
 
-
-# ============================
-# LOGIN SYSTEM
-# ============================
-
-def login():
-
-    st.title("🔐 NexusCart AI Login")
-
-    username = st.text_input(
-        "Username"
-    )
-
-    password = st.text_input(
-        "Password",
-        type="password"
-    )
-
-
-    if st.button("Login"):
-
-        if username == "admin" and password == "nexus123":
-
-            st.session_state.logged_in = True
-
-            st.success(
-                "Login Successful"
-            )
-
-            st.rerun()
-
-        else:
-
-            st.error(
-                "Invalid Username or Password"
-            )
-
-
-if "logged_in" not in st.session_state:
-
-    st.session_state.logged_in = False
-
-
-if not st.session_state.logged_in:
-
-    login()
-
-    st.stop()
-
-
-
 # ============================
 # LOAD MODEL
 # ============================
@@ -326,50 +275,3 @@ st.caption(
 Business Intelligence & Sales Prediction Platform
 """
 )
-# ============================
-# LOGIN SYSTEM
-# ============================
-
-def login():
-
-    st.title("🔐 NexusCart AI Login")
-
-    username = st.text_input(
-        "Username"
-    )
-
-    password = st.text_input(
-        "Password",
-        type="password"
-    )
-
-
-    if st.button("Login"):
-
-        if username == "admin" and password == "12345":
-
-            st.session_state.logged_in = True
-
-            st.success(
-                "Login Successful"
-            )
-
-            st.rerun()
-
-        else:
-
-            st.error(
-                "Invalid Username or Password"
-            )
-
-
-if "logged_in" not in st.session_state:
-
-    st.session_state.logged_in = False
-
-
-if not st.session_state.logged_in:
-
-    login()
-
-    st.stop()
