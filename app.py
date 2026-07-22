@@ -5,7 +5,7 @@ import pandas as pd
 
 
 # ============================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================
 
 st.set_page_config(
@@ -76,7 +76,7 @@ model = joblib.load(
 
 
 # ============================
-# LOAD CSV DATA
+# LOAD DATASET
 # ============================
 
 @st.cache_data
@@ -99,11 +99,11 @@ df = load_data()
 
 st.title("🚀 NexusCart AI")
 
-st.write(
+st.markdown(
 """
-AI Powered Retail Intelligence Platform
+### AI Powered Retail Intelligence Platform
 
-Excel → SQL → Python → Machine Learning → Power BI → Web
+Excel → SQL → Python → Machine Learning → Power BI → Web Application
 """
 )
 
@@ -133,41 +133,43 @@ page = st.sidebar.selectbox(
 if page == "Dashboard":
 
 
-    revenue = df["Total Amount"].sum()
+    total_revenue = df["Total Amount"].sum()
 
-    orders = len(df)
+    total_orders = len(df)
 
-    customers = df["Customer ID"].nunique()
+    total_customer = df["Customer ID"].nunique()
 
-    avg_order = df["Total Amount"].mean()
+    average_order = df["Total Amount"].mean()
 
 
 
     col1,col2,col3,col4 = st.columns(4)
 
 
+
     col1.metric(
         "Total Revenue",
-        f"₹ {round(revenue,2)}"
+        f"₹ {round(total_revenue,2)}"
     )
 
 
     col2.metric(
         "Total Orders",
-        orders
+        total_orders
     )
 
 
     col3.metric(
-        "Total Customers",
-        customers
+        "Customers",
+        total_customer
     )
 
 
     col4.metric(
-        "Average Order Value",
-        f"₹ {round(avg_order,2)}"
+        "Average Order",
+        f"₹ {round(average_order,2)}"
     )
+
 
 
     st.divider()
@@ -189,6 +191,7 @@ if page == "Dashboard":
 
 
 
+
 # ============================
 # AI PREDICTION
 # ============================
@@ -203,21 +206,25 @@ elif page == "AI Sales Prediction":
 
     quantity = st.number_input(
         "Quantity",
-        min_value=1
+        min_value=1,
+        value=1
     )
 
 
     price = st.number_input(
         "Price Per Unit",
-        min_value=1
+        min_value=1,
+        value=100
     )
 
 
     age = st.number_input(
         "Customer Age",
         min_value=18,
-        max_value=100
+        max_value=100,
+        value=25
     )
+
 
 
     if st.button(
@@ -225,15 +232,54 @@ elif page == "AI Sales Prediction":
     ):
 
 
-        input_data = np.array(
-            [
+        required_features = model.n_features_in_
+
+
+
+        if required_features == 1:
+
+            input_data = np.array(
                 [
-                    quantity,
-                    price,
-                    age
+                    [
+                        quantity
+                    ]
                 ]
-            ]
-        )
+            )
+
+
+        elif required_features == 2:
+
+            input_data = np.array(
+                [
+                    [
+                        quantity,
+                        price
+                    ]
+                ]
+            )
+
+
+        elif required_features == 3:
+
+            input_data = np.array(
+                [
+                    [
+                        quantity,
+                        price,
+                        age
+                    ]
+                ]
+            )
+
+
+        else:
+
+            st.error(
+                "Your model has unsupported number of features"
+            )
+
+            st.stop()
+
 
 
         prediction = model.predict(
@@ -247,8 +293,10 @@ elif page == "AI Sales Prediction":
 
 
 
+
+
 # ============================
-# DATASET
+# DATASET VIEW
 # ============================
 
 elif page == "Dataset":
@@ -273,5 +321,8 @@ elif page == "Dataset":
 st.divider()
 
 st.caption(
-"NexusCart AI | Business Intelligence & Sales Prediction Platform"
+"""
+© 2026 NexusCart AI |
+Business Intelligence & Sales Prediction Platform
+"""
 )
