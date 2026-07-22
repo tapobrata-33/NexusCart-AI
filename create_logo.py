@@ -1,166 +1,198 @@
 from PIL import Image, ImageDraw, ImageFont
+import os
 
 
-# ============================
-# CREATE NEXUSCART AI LOGO
-# ============================
-
-width = 1000
-height = 400
+# =====================================
+# NEXUSCART AI PROFESSIONAL LOGO CREATOR
+# =====================================
 
 
-# Create canvas
+# Create assets folder automatically
+
+if not os.path.exists("assets"):
+    os.makedirs("assets")
+
+
+
+# =====================================
+# CANVAS
+# =====================================
+
+width = 1200
+height = 500
+
+
 img = Image.new(
     "RGB",
     (width, height),
-    "white"
+    "#FFFFFF"
 )
 
 
 draw = ImageDraw.Draw(img)
 
 
-# Load fonts
+
+# =====================================
+# FONT SETTINGS
+# =====================================
+
 try:
 
     title_font = ImageFont.truetype(
         "arial.ttf",
-        90
+        100
     )
 
-    sub_font = ImageFont.truetype(
+    subtitle_font = ImageFont.truetype(
         "arial.ttf",
-        35
+        40
     )
 
 except:
 
     title_font = ImageFont.load_default()
 
-    sub_font = ImageFont.load_default()
+    subtitle_font = ImageFont.load_default()
 
 
 
-# Logo Icon (AI + Cart)
+# =====================================
+# AI SHOPPING CART ICON
+# =====================================
+
 
 # Cart body
 
 draw.rounded_rectangle(
-    (80,120,260,240),
-    radius=25,
-    outline=(0,120,255),
-    width=8
+    (100,170,330,320),
+    radius=35,
+    outline="#0066FF",
+    width=12
 )
+
 
 
 # Cart handle
 
 draw.line(
-    (50,100,100,130),
-    fill=(0,120,255),
-    width=8
+    (40,130,130,180),
+    fill="#0066FF",
+    width=12
 )
+
 
 
 # Wheels
 
 draw.ellipse(
-    (110,240,150,280),
-    fill=(0,120,255)
+    (150,320,200,370),
+    fill="#0066FF"
 )
+
 
 draw.ellipse(
-    (200,240,240,280),
-    fill=(0,120,255)
+    (260,320,310,370),
+    fill="#0066FF"
 )
 
 
 
-# AI network circles
+# =====================================
+# AI NETWORK DESIGN
+# =====================================
 
-points = [
-    (160,70),
-    (220,90),
-    (180,130)
+
+nodes = [
+
+    (200,80),
+    (280,120),
+    (160,130)
+
 ]
 
 
-for p in points:
+# Connection lines
+
+draw.line(
+    nodes,
+    fill="#00B894",
+    width=8
+)
+
+
+
+# AI nodes
+
+for x,y in nodes:
 
     draw.ellipse(
         (
-            p[0]-15,
-            p[1]-15,
-            p[0]+15,
-            p[1]+15
+            x-20,
+            y-20,
+            x+20,
+            y+20
         ),
-        fill=(0,200,150)
+        fill="#00B894"
     )
 
 
 
-# AI connection lines
+# =====================================
+# BRAND NAME
+# =====================================
 
-draw.line(
-    points,
-    fill=(0,200,150),
-    width=5
-)
-
-
-
-# Main text
 
 draw.text(
-    (330,100),
+    (420,130),
     "NexusCart AI",
     font=title_font,
-    fill=(20,40,80)
+    fill="#12355B"
 )
 
 
 
-# Subtitle
+# =====================================
+# TAGLINE
+# =====================================
+
 
 draw.text(
-    (340,220),
-    "Retail Intelligence Platform",
-    font=sub_font,
-    fill=(80,80,80)
+    (430,260),
+    "AI Powered Retail Intelligence",
+    font=subtitle_font,
+    fill="#555555"
 )
 
 
 
-# Save logo
+draw.text(
+    (430,320),
+    "Sales • Analytics • Machine Learning",
+    font=subtitle_font,
+    fill="#00B894"
+)
+
+
+
+# =====================================
+# SAVE LOGO
+# =====================================
+
+
+logo_path = "assets/logo.png"
+
 
 img.save(
-    "assets/logo.png"
+    logo_path
 )
 
 
 print(
-    "NexusCart AI logo created successfully!"
+    "NexusCart AI professional logo created successfully!"
+)
 
-header1, header2 = st.columns([1,4])
-
-with header1:
-
-    logo = Image.open(
-        "assets/logo.png"
-    )
-
-    st.image(
-        logo,
-        width=120
-    )
-
-
-with header2:
-
-    st.title(
-        "🚀 NexusCart AI"
-    )
-
-    st.subheader(
-        "AI Powered Retail Intelligence Platform"
-    ))
+print(
+    "Saved at:",
+    logo_path
+)
