@@ -140,4 +140,27 @@ img.save(
 
 print(
     "NexusCart AI logo created successfully!"
-)
+
+header1, header2 = st.columns([1,4])
+
+with header1:
+
+    logo = Image.open(
+        "assets/logo.png"
+    )
+
+    st.image(
+        logo,
+        width=120
+    )
+
+
+with header2:
+
+    st.title(
+        "🚀 NexusCart AI"
+    )
+
+    st.subheader(
+        "AI Powered Retail Intelligence Platform"
+    ))
