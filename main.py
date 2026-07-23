@@ -1,68 +1,142 @@
-from load_data import load_data
-
-from data_cleaning import clean_data
-
-from business_analysis import business_report
-
-from visualization import category_sales_chart
-
-from ai_model import train_ai
-
-from export_powerbi import export_kpi
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
-
-print("==============================")
-
-print("      NEXUS AI STARTED")
-
-print("==============================")
-
-
-# Load Data
-
-df = load_data()
+# Page Setup
+st.set_page_config(
+    page_title="NEXUS AI",
+    page_icon="🤖",
+    layout="wide"
+)
 
 
-print("Data Loaded")
+# Title
+st.title("🤖 NEXUS AI")
+st.subheader("AI Business Intelligence Dashboard")
 
 
-
-# Cleaning
-
-df = clean_data(df)
+st.success("NEXUS AI Dashboard Loaded Successfully")
 
 
-print("Data Cleaned")
+# Upload Dataset
+st.sidebar.header("Upload Data")
+
+file = st.sidebar.file_uploader(
+    "Upload CSV File",
+    type=["csv"]
+)
 
 
+if file:
 
-# Business Analysis
+    df = pd.read_csv(file)
 
-report = business_report(df)
+    st.subheader("Dataset Preview")
 
+    st.dataframe(df.head())
+
+
+    st.subheader("Dataset Information")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(
+            "Total Records",
+            len(df)
+        )
+
+    with col2:
+        st.metric(
+            "Total Columns",
+            len(df.columns)
+        )
+
+
+    st.subheader("Data Summary")
+
+    st.write(df.describe())
+
+
+else:
+
+    st.info(
+        "Please upload your sales CSV dataset from the left sidebar"
+    )
+    import streamlit as st
+import pandas as pd
+
+st.set_page_config(
+    page_title="NexusCart AI",
+    page_icon="🛒",
+    layout="wide"
+)
+
+st.title("🛒 NexusCart AI")
+st.subheader("AI Powered Retail Business Intelligence Dashboard")
+
+
+# Load Dataset
+try:
+    df = pd.read_csv("retail_sales.csv")
+    st.success("Dataset Loaded Successfully")
+
+except Exception as e:
+    st.error(e)
+    st.stop()
+
+
+# KPI Cards
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        "Total Revenue",
+        f"₹ {df['Total Amount'].sum():,.0f}"
+    )
+
+with col2:
+    st.metric(
+        "Total Transactions",
+        df.shape[0]
+    )
+
+with col3:
+    st.metric(
+        "Product Categories",
+        df["Product Category"].nunique()
+    )
+
+
+st.divider()
+
+
+# Data Preview
+
+st.header("📋 Sales Data")
+
+st.dataframe(df.head(20))
 
 
 # Chart
 
-category_sales_chart(df)
+st.header("📊 Revenue By Category")
+
+category_sales = df.groupby(
+    "Product Category"
+)["Total Amount"].sum()
+
+st.bar_chart(category_sales)
 
 
+# Monthly Sales
 
-# AI
+st.header("📈 Monthly Sales Trend")
 
-model = train_ai(df)
+monthly = df.groupby(
+    "Date"
+)["Total Amount"].sum()
 
-
-
-# Export
-
-export_kpi(report)
-
-
-
-print("==============================")
-
-print(" NEXUS AI COMPLETED ")
-
-print("==============================")
+st.line_chart(monthly)
