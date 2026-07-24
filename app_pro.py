@@ -12,6 +12,7 @@ import numpy as np
 
 
 
+
 # ==========================================
 # PAGE CONFIGURATION
 # ==========================================
@@ -25,7 +26,14 @@ st.set_page_config(
     layout="wide"
 
 )
-
+st.markdown(
+    """
+    <style>
+    ...
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # ==========================================
@@ -122,7 +130,8 @@ menu = st.sidebar.radio(
         "AI Prediction",
         "Recommendation",
         "Customer Support",
-        "About"
+        "About",
+        "AI Report Generator"
     ]
 )
 
@@ -1824,7 +1833,198 @@ if menu == "About":
     st.info(
         "🛒 NexusCart AI Pro | Developed by Tapobrata Deghuria"
     )
-    
+    # ==========================================
+# AI REPORT GENERATOR
+# ==========================================
+
+
+if menu == "AI Report Generator":
+
+
+    st.header(
+        "📄 AI Business Report Generator"
+    )
+
+
+    st.caption(
+        "Generate automated retail business reports"
+    )
+
+
+    st.divider()
+
+
+
+    total_revenue = df["Total Amount"].sum()
+
+
+    total_orders = len(df)
+
+
+    total_customers = df["Customer ID"].nunique()
+
+
+
+    top_category = (
+
+        df.groupby("Product Category")
+
+        ["Total Amount"]
+
+        .sum()
+
+        .idxmax()
+
+    )
+
+
+
+    st.subheader(
+        "📊 Report Preview"
+    )
+
+
+    col1,col2,col3 = st.columns(3)
+
+
+
+    with col1:
+
+        st.metric(
+
+            "Total Revenue",
+
+            f"₹ {total_revenue:,.0f}"
+
+        )
+
+
+    with col2:
+
+        st.metric(
+
+            "Total Orders",
+
+            total_orders
+
+        )
+
+
+    with col3:
+
+        st.metric(
+
+            "Customers",
+
+            total_customers
+
+        )
+
+
+
+    st.success(
+
+        f"🏆 Best Category: {top_category}"
+
+    )
+
+
+
+    # PDF GENERATION
+
+
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+
+    from reportlab.lib.styles import getSampleStyleSheet
+
+
+
+    if st.button(
+        "📄 Generate PDF Report"
+    ):
+
+
+        file_name = "NexusCart_Business_Report.pdf"
+
+
+
+        doc = SimpleDocTemplate(
+            file_name
+        )
+
+
+        styles = getSampleStyleSheet()
+
+
+        content = []
+
+
+
+        content.append(
+
+            Paragraph(
+
+                "NexusCart AI Pro Business Report",
+
+                styles["Title"]
+
+            )
+
+        )
+
+
+        content.append(
+            Spacer(1,20)
+        )
+
+
+        report_text = f"""
+
+        Total Revenue: ₹ {total_revenue:,.0f}
+
+        Total Orders: {total_orders}
+
+        Total Customers: {total_customers}
+
+        Best Performing Category: {top_category}
+
+
+        Generated using NexusCart AI Pro.
+
+        """
+
+
+        content.append(
+
+            Paragraph(
+
+                report_text,
+
+                styles["BodyText"]
+
+            )
+
+        )
+
+
+        doc.build(content)
+
+
+
+        with open(file_name,"rb") as pdf:
+
+
+            st.download_button(
+
+                label="⬇ Download Report",
+
+                data=pdf,
+
+                file_name=file_name,
+
+                mime="application/pdf"
+
+            )
 # ==========================================
 # FOOTER
 # ==========================================
