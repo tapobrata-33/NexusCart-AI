@@ -103,7 +103,7 @@ Provides:
 
 ## Programming Language
 
-🐍 Python
+Python
 
 
 ## Data Analysis
