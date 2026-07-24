@@ -23,19 +23,59 @@ st.set_page_config(
 
     page_icon="🛒",
 
-    layout="wide"
+    layout="wide",
+
+    initial_sidebar_state="auto"
 
 )
+
+
+# ==========================================
+# RESPONSIVE DESIGN
+# ==========================================
+
 st.markdown(
     """
     <style>
-    ...
+
+    .block-container {
+
+        padding-left: 2rem;
+        padding-right: 2rem;
+
+    }
+
+
+    @media (max-width: 768px){
+
+        .block-container {
+
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+        }
+
+
+        h1 {
+
+            font-size: 26px !important;
+
+        }
+
+
+        h2 {
+
+            font-size: 22px !important;
+
+        }
+
+    }
+
+
     </style>
     """,
     unsafe_allow_html=True
 )
-
-
 # ==========================================
 # LOAD DATA
 # ==========================================
@@ -130,8 +170,9 @@ menu = st.sidebar.radio(
         "AI Prediction",
         "Recommendation",
         "Customer Support",
-        "About",
-        "AI Report Generator"
+        "AI Report Generator",
+        "AI Business Insights",
+        "About"
     ]
 )
 
@@ -2025,6 +2066,174 @@ if menu == "AI Report Generator":
                 mime="application/pdf"
 
             )
+            # ==========================================
+# AI BUSINESS INSIGHTS
+# ==========================================
+
+elif menu == "AI Business Insights":
+
+    st.header("🧠 AI Business Insights")
+
+    st.write(
+        "Automatically generated business intelligence summary"
+    )
+
+    st.divider()
+
+
+    # Total Revenue
+
+    total_revenue = df["Total Amount"].sum()
+
+
+    # Total Orders
+
+    total_orders = len(df)
+
+
+    # Average Order Value
+
+    avg_order = total_revenue / total_orders
+
+
+
+    # Best Category
+
+    best_category = (
+        df.groupby("Product Category")
+        ["Total Amount"]
+        .sum()
+        .idxmax()
+    )
+
+
+    category_revenue = (
+        df.groupby("Product Category")
+        ["Total Amount"]
+        .sum()
+        .max()
+    )
+
+
+
+    # Customer Analysis
+
+    top_customer_type = (
+        df.groupby("Customer Type")
+        ["Total Amount"]
+        .sum()
+        .idxmax()
+    )
+
+
+    col1, col2, col3 = st.columns(3)
+
+
+    with col1:
+
+        st.metric(
+            "💰 Total Revenue",
+            f"₹ {total_revenue:,.0f}"
+        )
+
+
+    with col2:
+
+        st.metric(
+            "📦 Total Orders",
+            total_orders
+        )
+
+
+    with col3:
+
+        st.metric(
+            "🛒 Avg Order Value",
+            f"₹ {avg_order:,.0f}"
+        )
+
+
+
+    st.divider()
+
+
+
+    st.subheader("🤖 AI Generated Business Summary")
+
+
+    insights = []
+
+
+    insights.append(
+        f"🏆 Best performing category is {best_category} generating ₹{category_revenue:,.0f} revenue."
+    )
+
+
+    insights.append(
+        f"👥 {top_customer_type} customers contribute the highest revenue."
+    )
+
+
+    if avg_order > 1000:
+
+        insights.append(
+            "📈 Average order value is strong. Consider premium product promotions."
+        )
+
+    else:
+
+        insights.append(
+            "📢 Increase basket size using discounts and bundles."
+        )
+
+
+
+    insights.append(
+        "🚀 Recommendation: Focus marketing campaigns on high-value customers."
+    )
+
+
+
+    for item in insights:
+
+        st.success(item)
+
+
+
+    st.divider()
+
+
+
+    st.subheader("📊 Category Performance")
+
+
+    category_df = (
+        df.groupby("Product Category")
+        ["Total Amount"]
+        .sum()
+        .reset_index()
+    )
+
+
+    fig = px.bar(
+
+        category_df,
+
+        x="Product Category",
+
+        y="Total Amount",
+
+        text_auto=True,
+
+        title="Revenue By Category"
+
+    )
+
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 # ==========================================
 # FOOTER
 # ==========================================
