@@ -690,8 +690,8 @@ if menu == "About":
         st.write(
             """
             **Tapobrata Deghuria**
-            BCA Student
-            Data Analytics & AI Enthusiast
+            (BCA Student
+            Data Analytics & AI Enthusiast)
             Developed:
             NexusCart AI Pro
             """
