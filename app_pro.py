@@ -2329,6 +2329,68 @@ elif menu == "Customer Feedback":
 
         st.info("No feedback available yet.")
 # ==========================================
+# CUSTOMER REVIEWS
+# ==========================================
+
+st.subheader("⭐ What Our Users Say")
+
+reviews = [
+
+    {
+        "name": "Rahul Sharma",
+        "rating": "⭐⭐⭐⭐⭐",
+        "comment": "Excellent dashboard! The sales insights are very useful and easy to understand."
+    },
+
+    {
+        "name": "Priya Das",
+        "rating": "⭐⭐⭐⭐⭐",
+        "comment": "The AI Prediction feature helped us identify customer trends quickly."
+    },
+
+    {
+        "name": "Amit Kumar",
+        "rating": "⭐⭐⭐⭐",
+        "comment": "Beautiful UI and smooth experience. Looking forward to more features."
+    },
+
+    {
+        "name": "Sneha Roy",
+        "rating": "⭐⭐⭐⭐⭐",
+        "comment": "Customer Churn Prediction is amazing. Great project!"
+    },
+
+    {
+        "name": "Rohit Singh",
+        "rating": "⭐⭐⭐⭐⭐",
+        "comment": "Professional dashboard with impressive analytics and AI recommendations."
+    }
+
+]
+
+for review in reviews:
+
+    st.markdown(
+        f"""
+<div style="
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+border-left:5px solid #4CAF50;
+">
+
+<h4>{review['name']}</h4>
+
+<p>{review['rating']}</p>
+
+<p>{review['comment']}</p>
+
+</div>
+""",
+        unsafe_allow_html=True
+    )
+# ==========================================
 # FOOTER
 # ==========================================
 
