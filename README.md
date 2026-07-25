@@ -1,4 +1,3 @@
-![NexusCart AI Pro Banner](screenshots/banner.png)
 
 # 🛒 NexusCart AI Pro
 
@@ -11,7 +10,7 @@
 
 ---
 
-# 🚀 Project Overview
+#  Project Overview
 
 NexusCart AI Pro is an AI-powered Retail Business Intelligence Platform designed to help businesses analyze sales performance, understand customers, predict future trends, and make data-driven decisions.
 
@@ -27,9 +26,9 @@ The platform combines:
 
 ---
 
-# ✨ Key Features
+#   Key Features
 
-## 📊 Executive Dashboard
+##  Executive Dashboard
 
 - Revenue tracking
 - Sales performance monitoring
@@ -37,7 +36,7 @@ The platform combines:
 - Business KPIs
 
 
-## 📈 Sales Analysis
+##   Sales Analysis
 
 - Category-wise revenue
 - Product performance
@@ -45,7 +44,7 @@ The platform combines:
 - Interactive charts
 
 
-## 🤖 AI Features
+##   AI Features
 
 - Customer behavior analysis
 - Churn prediction
@@ -54,7 +53,7 @@ The platform combines:
 - Business insights
 
 
-## 📞 Customer Support
+##   Customer Support
 
 - Customer query assistance
 - Contact management
@@ -63,7 +62,7 @@ The platform combines:
 
 ---
 
-# 📊 Real-Time Business Monitoring
+#   Real-Time Business Monitoring
 
 NexusCart AI Pro provides real-time business intelligence simulation.
 
@@ -72,30 +71,27 @@ NexusCart AI Pro provides real-time business intelligence simulation.
 
 | Metric | Current Status |
 |---|---|
-| 💰 Revenue Today | ₹1,25,000 |
-| 📦 Orders Today | 245 |
-| 👥 Active Customers | 87 |
-| 📈 Growth Rate | +15% |
-| ⭐ Customer Satisfaction | 92% |
+|   Revenue Today | ₹1,25,000 |
+|   Orders Today | 245 |
+|   Active Customers | 87 |
+|   Growth Rate | +15% |
+|   Customer Satisfaction | 92% |
+---
+#   AI Business Alerts
+
+
+ Revenue target achieved
+
+
+ Sales trend monitoring active
+
+
+ Low performing products detected
 
 
 ---
 
-# 🔔 AI Business Alerts
-
-
-🟢 Revenue target achieved
-
-
-🟡 Sales trend monitoring active
-
-
-🔴 Low performing products detected
-
-
----
-
-# 🖼️ Application Screenshots
+#  Application Screenshots
 
 
 ## Dashboard
@@ -120,7 +116,7 @@ NexusCart AI Pro provides real-time business intelligence simulation.
 
 ---
 
-# 🛠️ Technology Stack
+#  Technology Stack
 
 
 | Technology | Usage |
@@ -135,7 +131,7 @@ NexusCart AI Pro provides real-time business intelligence simulation.
 
 ---
 
-# ⚙️ Installation
+#   Installation
 
 
 ```bash
