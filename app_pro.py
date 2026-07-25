@@ -145,61 +145,91 @@ if df.empty:
 
     st.stop()
 
-
-
 # ==========================================
-# SIDEBAR NAVIGATION
+# PREMIUM AI SIDEBAR DESIGN
 # ==========================================
 
+with st.sidebar:
 
-st.sidebar.title(
+    # Brand Section
+    st.markdown(
+        """
+        <div style="
+            background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+            padding:20px;
+            border-radius:15px;
+            text-align:center;
+            margin-bottom:20px;
+        ">
 
-    "🛒 NexusCart AI Pro"
+        <h1 style="color:white;font-size:28px;">
+        🛒
+        </h1>
 
-)
+        <h2 style="color:white;margin:0;">
+        NexusCart AI Pro
+        </h2>
 
-menu = st.sidebar.radio(
-    "Navigation",
-    [
-        "Dashboard",
-        "Sales Analysis",
-        "Customer AI",
-        "Churn Prediction",
-        "AI Assistant",
-        "Sales Forecast",
-        "AI Prediction",
-        "Recommendation",
-        "Customer Support",
-        "AI Report Generator",
-        "AI Business Insights",
-        "Customer Feedback",
-        "About"
-    ]
-)
+        <p style="color:#d1d5db;font-size:13px;">
+        Enterprise Retail Intelligence Platform
+        </p>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+    # Navigation
+
+    st.markdown(
+        "### 🚀 Platform Navigation"
+    )
+
+
+    menu = st.radio(
+        "",
+        [
+            "Dashboard",
+            "Sales Analysis",
+            "Customer AI",
+            "Churn Prediction",
+            "AI Assistant",
+            "Sales Forecast",
+            "AI Prediction",
+            "Recommendation",
+            "Customer Support",
+            "AI Report Generator",
+            "AI Business Insights",
+            "Customer Feedback",
+            "About"
+        ]
+    )
+
+
+    st.markdown("---")
 
 # ==========================================
-# SIDEBAR INFO
+# SYSTEM STATUS
 # ==========================================
-
 
 st.sidebar.divider()
 
-
 st.sidebar.success(
-
-    "AI Powered Retail Intelligence"
-
+    "🟢 System Status: Online"
 )
-
 
 st.sidebar.caption(
-
-    "Python • ML • Analytics • AI"
-
+    "AI Engine: Active ✅"
 )
 
+st.sidebar.caption(
+    "ML Models: Ready ✅"
+)
 
-
+st.sidebar.caption(
+    "Application: Running ✅"
+)
 # ==========================================
 # GLOBAL HEADER
 # ==========================================
