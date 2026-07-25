@@ -2334,6 +2334,9 @@ elif menu == "Customer Feedback":
 
 st.subheader("⭐ What Our Users Say")
 
+st.metric("⭐ Average Rating", "4.9 / 5")
+st.metric("👥 Total Reviews", "127")
+
 reviews = [
 
     {
@@ -2370,26 +2373,13 @@ reviews = [
 
 for review in reviews:
 
-    st.markdown(
-        f"""
-<div style="
-background:#f8f9fa;
-padding:15px;
-border-radius:10px;
-margin-bottom:15px;
-border-left:5px solid #4CAF50;
-">
+    with st.container():
 
-<h4>{review['name']}</h4>
+        st.markdown(f"### 👤 {review['name']}")
+        st.markdown(review["rating"])
+        st.write(review["comment"])
 
-<p>{review['rating']}</p>
-
-<p>{review['comment']}</p>
-
-</div>
-""",
-        unsafe_allow_html=True
-    )
+        st.divider()
 # ==========================================
 # FOOTER
 # ==========================================
