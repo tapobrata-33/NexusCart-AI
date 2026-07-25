@@ -172,6 +172,7 @@ menu = st.sidebar.radio(
         "Customer Support",
         "AI Report Generator",
         "AI Business Insights",
+        "Customer Feedback",
         "About"
     ]
 )
@@ -2234,6 +2235,99 @@ elif menu == "AI Business Insights":
         fig,
         use_container_width=True
     )
+    # ==========================================
+# CUSTOMER FEEDBACK
+# ==========================================
+
+elif menu == "Customer Feedback":
+
+    st.title("⭐ Customer Feedback")
+
+    st.write("We value your feedback! Please share your experience with NexusCart AI Pro.")
+
+    import os
+    import pandas as pd
+
+    feedback_file = "customer_feedback.csv"
+
+    with st.form("feedback_form"):
+
+        name = st.text_input("👤 Your Name")
+
+        email = st.text_input("📧 Email")
+
+        rating = st.slider(
+            "⭐ Overall Rating",
+            1,
+            5,
+            5
+        )
+
+        feedback = st.text_area(
+            "💬 Your Feedback"
+        )
+
+        submitted = st.form_submit_button("Submit Feedback")
+
+        if submitted:
+
+            if name == "" or feedback == "":
+
+                st.error("Please fill all required fields.")
+
+            else:
+
+                new_feedback = pd.DataFrame({
+
+                    "Name": [name],
+
+                    "Email": [email],
+
+                    "Rating": [rating],
+
+                    "Feedback": [feedback]
+
+                })
+
+                if os.path.exists(feedback_file):
+
+                    old_feedback = pd.read_csv(feedback_file)
+
+                    updated_feedback = pd.concat(
+                        [old_feedback, new_feedback],
+                        ignore_index=True
+                    )
+
+                    updated_feedback.to_csv(
+                        feedback_file,
+                        index=False
+                    )
+
+                else:
+
+                    new_feedback.to_csv(
+                        feedback_file,
+                        index=False
+                    )
+
+                st.success("✅ Thank you! Your feedback has been submitted.")
+
+    st.divider()
+
+    st.subheader("📋 Customer Reviews")
+
+    if os.path.exists(feedback_file):
+
+        reviews = pd.read_csv(feedback_file)
+
+        st.dataframe(
+            reviews,
+            use_container_width=True
+        )
+
+    else:
+
+        st.info("No feedback available yet.")
 # ==========================================
 # FOOTER
 # ==========================================
