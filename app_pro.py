@@ -1336,6 +1336,98 @@ if selected == "Customers":
         use_container_width=True
 
     )
+    # ==========================================
+# CUSTOMER FEEDBACK
+# ==========================================
+
+st.markdown("---")
+st.subheader("⭐ Customer Feedback Analysis")
+
+feedback_data = pd.DataFrame({
+    "Rating": [5, 4, 5, 3, 4, 5, 2, 1, 4, 5],
+    "Feedback": [
+        "Excellent product quality",
+        "Fast delivery",
+        "Very satisfied",
+        "Average experience",
+        "Good customer service",
+        "Highly recommended",
+        "Late delivery",
+        "Poor packaging",
+        "Worth the price",
+        "Amazing shopping experience"
+    ],
+    "Sentiment": [
+        "Positive",
+        "Positive",
+        "Positive",
+        "Neutral",
+        "Positive",
+        "Positive",
+        "Negative",
+        "Negative",
+        "Positive",
+        "Positive"
+    ]
+})
+
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.dataframe(
+        feedback_data,
+        use_container_width=True,
+        hide_index=True
+    )
+
+with col2:
+    avg_rating = feedback_data["Rating"].mean()
+    st.metric(
+        "Average Rating",
+        f"{avg_rating:.1f} ⭐"
+    )
+
+st.markdown("### Sentiment Distribution")
+
+sentiment_count = feedback_data["Sentiment"].value_counts().reset_index()
+sentiment_count.columns = ["Sentiment", "Count"]
+
+fig = px.pie(
+    sentiment_count,
+    values="Count",
+    names="Sentiment",
+    hole=0.45,
+    title="Customer Sentiment"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("### Rating Distribution")
+
+rating_count = feedback_data["Rating"].value_counts().sort_index().reset_index()
+rating_count.columns = ["Rating", "Count"]
+
+fig2 = px.bar(
+    rating_count,
+    x="Rating",
+    y="Count",
+    text="Count",
+    title="Customer Ratings"
+)
+
+st.plotly_chart(fig2, use_container_width=True)
+
+positive = (feedback_data["Sentiment"] == "Positive").sum()
+negative = (feedback_data["Sentiment"] == "Negative").sum()
+neutral = (feedback_data["Sentiment"] == "Neutral").sum()
+
+c1, c2, c3 = st.columns(3)
+
+c1.metric("😊 Positive", positive)
+c2.metric("😐 Neutral", neutral)
+c3.metric("😞 Negative", negative)
+
+st.success("AI Insight: Most customers are satisfied with product quality and delivery. Improve packaging and delivery speed to reduce negative feedback.")
     # ==========================================================
 # PART 4 : AI PREDICTION + SALES FORECAST
 # ==========================================================
