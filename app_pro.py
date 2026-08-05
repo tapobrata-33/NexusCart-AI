@@ -1,145 +1,98 @@
 # ==========================================================
 # NEXUS CART AI PRO
-# PART 1 : SETUP + SIDEBAR + HEADER + KPI
+# PART 1 + PART 2 FIXED
 # ==========================================================
-
 
 import streamlit as st
 import pandas as pd
 import numpy as np
 
-
 import plotly.express as px
 import plotly.graph_objects as go
 
 from streamlit_option_menu import option_menu
-
 from datetime import datetime
 import joblib
-model = joblib.load("NexusAI_Model.pkl")
 
 
 # ==========================================================
 # PAGE CONFIG
 # ==========================================================
 
-
 st.set_page_config(
-
     page_title="NexusCart AI Pro",
-
     page_icon="🛒",
-
     layout="wide",
-
     initial_sidebar_state="expanded"
-
 )
-
 
 
 # ==========================================================
 # LOAD CSS
 # ==========================================================
 
-
 def load_css():
 
     try:
-
         with open("style.css") as f:
-
             st.markdown(
-
                 f"<style>{f.read()}</style>",
-
                 unsafe_allow_html=True
-
             )
 
     except:
-
         pass
-
 
 
 load_css()
 
 
-
 # ==========================================================
-# DATA GENERATION
-# Replace with retail_sales.csv later
+# LOAD MODEL
 # ==========================================================
 
+try:
+    model = joblib.load("NexusAI_Model.pkl")
+except:
+    model = None
+
+
+
+# ==========================================================
+# DATA
+# ==========================================================
 
 np.random.seed(42)
 
 
-categories = [
-
-    "Electronics",
-
-    "Fashion",
-
-    "Beauty",
-
-    "Furniture",
-
-    "Groceries"
-
-]
-
-
 months = [
-
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-
+    "Jan","Feb","Mar","Apr",
+    "May","Jun","Jul","Aug",
+    "Sep","Oct","Nov","Dec"
 ]
-
 
 
 df = pd.DataFrame({
 
-    "Month":months,
+    "Month": months,
 
-    "Sales":np.random.randint(
-
+    "Sales": np.random.randint(
         30000,
-
         90000,
-
         12
-
     ),
 
-    "Orders":np.random.randint(
-
+    "Orders": np.random.randint(
         100,
-
         500,
-
         12
-
     )
 
 })
 
 
-
 # ==========================================================
-# SIDEBAR NAVIGATION
+# SIDEBAR
 # ==========================================================
 
 
@@ -147,49 +100,29 @@ with st.sidebar:
 
 
     st.markdown(
-
         """
-
         <h2 style="text-align:center">
-
         🛒 NexusCart AI
-
         </h2>
-
         """,
-
         unsafe_allow_html=True
-
     )
-
-
-    st.write("")
 
 
     selected = option_menu(
 
         menu_title=None,
 
-
         options=[
 
-
             "Dashboard",
-
             "Sales",
-
             "Products",
-
             "Customers",
-
             "AI Prediction",
-
             "Forecast",
-
             "Recommendation",
-
             "Reports",
-
             "Settings"
 
         ],
@@ -197,23 +130,14 @@ with st.sidebar:
 
         icons=[
 
-
             "speedometer2",
-
             "bar-chart",
-
             "box",
-
             "people",
-
             "cpu",
-
             "graph-up",
-
             "stars",
-
             "file-earmark",
-
             "gear"
 
         ],
@@ -224,167 +148,123 @@ with st.sidebar:
     )
 
 
+    st.divider()
+
+
+    st.success(
+        "🟢 System Online"
+    )
+
+
+    st.caption(
+        "AI Engine Active"
+    )
+
+
+    st.caption(
+        "© 2026 NexusCart AI"
+    )
+
+
+
+# ==========================================================
+# ONLY DASHBOARD HEADER + KPI
+# ==========================================================
+
+
+if selected == "Dashboard":
+
+
+    left,right = st.columns([8,2])
+
+
+    with left:
+
+
+        st.markdown(
+
+            """
+            <h1>
+            Welcome Back 👋
+            </h1>
+            """,
+
+            unsafe_allow_html=True
+
+        )
+
+
+        st.caption(
+            "AI Powered Retail Intelligence Platform"
+        )
+
+
+
+    with right:
+
+
+        st.metric(
+
+            "Today",
+
+            datetime.now().strftime(
+                "%d %b %Y"
+            )
+
+        )
+
+
+
+    st.write("")
+
+
+    c1,c2,c3,c4 = st.columns(4)
+
+
+
+    with c1:
+
+        st.metric(
+            "💰 Revenue",
+            "₹12,54,320",
+            "+12.5%"
+        )
+
+
+    with c2:
+
+        st.metric(
+            "📦 Orders",
+            "8452",
+            "+8.2%"
+        )
+
+
+    with c3:
+
+        st.metric(
+            "👥 Customers",
+            "3245",
+            "+5.4%"
+        )
+
+
+    with c4:
+
+        st.metric(
+            "📈 Profit",
+            "₹4,32,510",
+            "+15%"
+        )
+
+
 
     st.divider()
 
 
 
-    st.success(
-
-        "🟢 System Online"
-
-    )
-
-
-    st.caption(
-
-        "AI Engine Active"
-
-    )
-
-
-    st.caption(
-
-        "© 2026 NexusCart AI"
-
-    )
-
-
-
-
-
 # ==========================================================
-# HEADER
-# ==========================================================
-
-
-left,right = st.columns([8,2])
-
-
-
-with left:
-
-
-    st.markdown(
-
-        """
-
-        <h1>
-
-        Welcome Back 👋
-
-        </h1>
-
-        """,
-
-        unsafe_allow_html=True
-
-    )
-
-
-    st.caption(
-
-        "AI Powered Retail Intelligence Platform"
-
-    )
-
-
-
-with right:
-
-
-    st.metric(
-
-        "Today",
-
-        datetime.now().strftime(
-
-            "%d %b %Y"
-
-        )
-
-    )
-
-
-
-st.write("")
-
-
-
-# ==========================================================
-# KPI CARDS
-# ==========================================================
-
-
-c1,c2,c3,c4 = st.columns(4)
-
-
-
-with c1:
-
-
-    st.metric(
-
-        "💰 Revenue",
-
-        "₹12,54,320",
-
-        "+12.5%"
-
-    )
-
-
-
-with c2:
-
-
-    st.metric(
-
-        "📦 Orders",
-
-        "8452",
-
-        "+8.2%"
-
-    )
-
-
-
-with c3:
-
-
-    st.metric(
-
-        "👥 Customers",
-
-        "3245",
-
-        "+5.4%"
-
-    )
-
-
-with c4:
-
-
-    st.metric(
-
-        "📈 Profit",
-
-        "₹4,32,510",
-
-        "+15%"
-
-    )
-
-
-
-st.divider()
-
-
-
-# ==========================================================
-# DASHBOARD TITLE
+# DASHBOARD ANALYTICS
 # ==========================================================
 
 
@@ -392,42 +272,20 @@ if selected == "Dashboard":
 
 
     st.subheader(
-
         "📊 Executive Dashboard"
-
     )
 
 
-    st.info(
-
-        "Dashboard analytics will be added in Part 2."
-
-    )
-    # ==========================================================
-# PART 2 : DASHBOARD ANALYTICS
-# ==========================================================
-
-
-if selected == "Dashboard":
-
-
-    # ------------------------------------------------------
-    # SALES ANALYTICS + DONUT
-    # ------------------------------------------------------
-
-
-    left_chart, right_chart = st.columns([3,1])
-
+    left_chart,right_chart = st.columns([3,1])
 
 
     with left_chart:
 
 
-        sales_chart = go.Figure()
+        chart = go.Figure()
 
 
-
-        sales_chart.add_trace(
+        chart.add_trace(
 
             go.Scatter(
 
@@ -437,27 +295,14 @@ if selected == "Dashboard":
 
                 mode="lines+markers",
 
-                name="Revenue",
-
-                line=dict(
-
-                    width=4
-
-                ),
-
-                marker=dict(
-
-                    size=8
-
-                )
+                name="Revenue"
 
             )
 
         )
 
 
-
-        sales_chart.add_trace(
+        chart.add_trace(
 
             go.Scatter(
 
@@ -467,37 +312,25 @@ if selected == "Dashboard":
 
                 mode="lines",
 
-                name="Orders",
-
-                line=dict(
-
-                    width=3,
-
-                    dash="dot"
-
-                )
+                name="Orders"
 
             )
 
         )
 
 
-
-        sales_chart.update_layout(
+        chart.update_layout(
 
             title="📈 Sales Performance",
 
-            height=400,
-
-            template="plotly_white"
+            height=400
 
         )
 
 
-
         st.plotly_chart(
 
-            sales_chart,
+            chart,
 
             use_container_width=True
 
@@ -505,62 +338,34 @@ if selected == "Dashboard":
 
 
 
-
-
-    # ------------------------------------------------------
-    # DONUT CHART
-    # ------------------------------------------------------
-
-
     with right_chart:
 
 
-
-        revenue_source = pd.DataFrame({
+        source = pd.DataFrame({
 
             "Source":[
-
                 "Online",
-
                 "Offline",
-
                 "Wholesale",
-
                 "Other"
-
             ],
 
-
-            "Value":[
-
-                45,
-
-                30,
-
-                15,
-
-                10
-
-            ]
+            "Value":[45,30,15,10]
 
         })
 
 
-
         donut = px.pie(
 
-            revenue_source,
+            source,
 
             names="Source",
 
             values="Value",
 
-            hole=0.6,
-
-            title="Revenue Source"
+            hole=0.6
 
         )
-
 
 
         st.plotly_chart(
@@ -573,80 +378,48 @@ if selected == "Dashboard":
 
 
 
-
-
-    st.divider()
-
-
-
-    # ------------------------------------------------------
-    # CATEGORY PERFORMANCE
-    # ------------------------------------------------------
-
-
     st.subheader(
-
         "🏆 Top Categories"
-
     )
 
 
-
-    category_df = pd.DataFrame({
-
+    category = pd.DataFrame({
 
         "Category":[
-
             "Electronics",
-
             "Fashion",
-
             "Furniture",
-
             "Beauty",
-
             "Groceries"
-
         ],
 
-
         "Sales":[
-
             450000,
-
             320000,
-
             270000,
-
             180000,
-
             150000
-
         ]
 
     })
 
 
+    fig = px.bar(
 
-    category_chart = px.bar(
-
-        category_df,
+        category,
 
         x="Category",
 
         y="Sales",
 
-        text="Sales",
-
-        title="Category Revenue"
+        text="Sales"
 
     )
 
 
-
     st.plotly_chart(
 
-        category_chart,
+        fig,
 
         use_container_width=True
 
@@ -654,199 +427,38 @@ if selected == "Dashboard":
 
 
 
-
-
-    # ------------------------------------------------------
-    # SMALL KPI
-    # ------------------------------------------------------
-
-
-    st.write("")
-
-
-
-    a,b,c,d = st.columns(4)
-
-
-
-    with a:
-
-
-        st.success(
-
-            "⭐ Best Seller"
-
-        )
-
-
-        st.metric(
-
-            "Laptop",
-
-            "1245 Sold"
-
-        )
-
-
-
-    with b:
-
-
-        st.info(
-
-            "🛒 Avg Basket"
-
-        )
-
-
-        st.metric(
-
-            "₹1540",
-
-            "+8%"
-
-        )
-
-
-
-    with c:
-
-
-        st.warning(
-
-            "👥 Returning"
-
-        )
-
-
-        st.metric(
-
-            "68%",
-
-            "+4%"
-
-        )
-
-
-
-    with d:
-
-
-        st.error(
-
-            "📦 Pending"
-
-        )
-
-
-        st.metric(
-
-            "53",
-
-            "-9%"
-
-        )
-
-
-
-
-
-    st.divider()
-
-
-
-    # ------------------------------------------------------
-    # RECENT ORDERS
-    # ------------------------------------------------------
-
-
     st.subheader(
-
         "📦 Recent Orders"
-
     )
-
 
 
     orders = pd.DataFrame({
 
-
         "Order ID":[
-
             "#1001",
-
             "#1002",
-
             "#1003",
-
             "#1004",
-
             "#1005"
-
         ],
-
 
         "Customer":[
-
             "Rahul",
-
             "Priya",
-
             "Amit",
-
             "Sneha",
-
             "Rohan"
-
         ],
-
-
-        "Category":[
-
-            "Electronics",
-
-            "Fashion",
-
-            "Beauty",
-
-            "Furniture",
-
-            "Groceries"
-
-        ],
-
-
-        "Amount":[
-
-            1240,
-
-            3400,
-
-            875,
-
-            9250,
-
-            1420
-
-        ],
-
 
         "Status":[
-
             "Completed",
-
             "Pending",
-
             "Completed",
-
             "Delivered",
-
             "Cancelled"
-
         ]
 
     })
-
 
 
     st.dataframe(
@@ -856,59 +468,6 @@ if selected == "Dashboard":
         use_container_width=True,
 
         hide_index=True
-
-    )
-
-
-
-
-
-    # ------------------------------------------------------
-    # PROFIT ANALYSIS
-    # ------------------------------------------------------
-
-
-    st.write("")
-
-
-
-    profit = pd.DataFrame({
-
-        "Month":months,
-
-        "Profit":np.random.randint(
-
-            5000,
-
-            25000,
-
-            12
-
-        )
-
-    })
-
-
-
-    profit_chart = px.area(
-
-        profit,
-
-        x="Month",
-
-        y="Profit",
-
-        title="Monthly Profit Growth"
-
-    )
-
-
-
-    st.plotly_chart(
-
-        profit_chart,
-
-        use_container_width=True
 
     )
     # ==========================================================
