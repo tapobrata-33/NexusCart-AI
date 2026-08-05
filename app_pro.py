@@ -1,1031 +1,1933 @@
+# ==========================================================
+# NEXUS CART AI PRO
+# PART 1 : SETUP + SIDEBAR + HEADER + KPI
+# ==========================================================
+
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import numpy as np
+
+
+import plotly.express as px
+import plotly.graph_objects as go
+
+from streamlit_option_menu import option_menu
+
+from datetime import datetime
+import joblib
+model = joblib.load("NexusAI_Model.pkl")
+
+
+# ==========================================================
+# PAGE CONFIG
+# ==========================================================
+
+
 st.set_page_config(
+
     page_title="NexusCart AI Pro",
+
     page_icon="🛒",
+
     layout="wide",
-    initial_sidebar_state="auto"
+
+    initial_sidebar_state="expanded"
+
 )
-st.markdown(
-    """
-    <style>
-    .block-container {
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-    @media (max-width: 768px){
-        .block-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-        h1 {
-            font-size: 26px !important;
-        }
-        h2 {
-            font-size: 22px !important;
-        }
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-@st.cache_data
-def load_data():
+
+
+
+# ==========================================================
+# LOAD CSS
+# ==========================================================
+
+
+def load_css():
+
     try:
-        df = pd.read_csv("retail_sales.csv")
-        if "Total Amount" in df.columns:
-            df["Total Amount"] = pd.to_numeric(
-                df["Total Amount"],
-                errors="coerce"
-            )
-        if "Date" in df.columns:
-            df["Date"] = pd.to_datetime(
-                df["Date"],
-                errors="coerce"
-            )
-        return df
-    except Exception as e:
-        st.error(
-            f"Dataset loading error: {e}"
-        )
-        return pd.DataFrame()
-df = load_data()
-if df.empty:
-    st.warning(
-        "Dataset not found. Put retail_sales.csv in the same folder."
-    )
-    st.stop()
-with st.sidebar:
-    st.markdown(
-        """
-        <div style="
-            background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-            padding:20px;
-            border-radius:15px;
-            text-align:center;
-            margin-bottom:20px;
-        ">
-        <h1 style="color:white;font-size:28px;">
-        🛒
-        </h1>
-        <h2 style="color:white;margin:0;">
-        NexusCart AI Pro
-        </h2>
-        <p style="color:#d1d5db;font-size:13px;">
-        Enterprise Retail Intelligence Platform
-        </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        "###  Platform Navigation"
-    )
-    menu = st.radio(
-        "",
-        [
-            "Dashboard",
-            "Sales Analysis",
-            "Customer AI",
-            "Churn Prediction",
-            "AI Assistant",
-            "Sales Forecast",
-            "AI Prediction",
-            "Recommendation",
-            "Customer Support",
-            "AI Report Generator",
-            "AI Business Insights",
-            "Customer Feedback",
-            "About"
-        ]
-    )
-    st.markdown("---")
-st.sidebar.divider()
-st.sidebar.success(
-    " System Status: Online"
-)
-st.sidebar.caption(
-    "AI Engine: Active "
-)
-st.sidebar.caption(
-    "ML Models: Ready "
-)
-st.sidebar.caption(
-    "Application: Running "
-)
-st.title(
-    "🛒 NexusCart AI Pro"
-)
-st.caption(
-    "Enterprise AI Powered Retail Business Intelligence Platform"
-)
-if menu == "Dashboard":
-    st.header(
-        " Business Dashboard"
-    )
-    st.write(
-        "Analyze sales, customers and business performance using Artificial Intelligence."
-    )
-    st.divider()
-    total_revenue = df["Total Amount"].sum()
-    total_orders = len(df)
-    total_customers = df["Customer ID"].nunique()
-    avg_order = df["Total Amount"].mean()
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric(
-            "Total Revenue",
-            f" {total_revenue:,.0f}"
-        )
-    with col2:
-        st.metric(
-            "Total Orders",
-            f"{total_orders:,}"
-        )
-    with col3:
-        st.metric(
-            " Customers",
-            f"{total_customers:,}"
-        )
-    with col4:
-        st.metric(
-            "Average Order",
-            f" {avg_order:,.0f}"
-        )
-    st.divider()
-    st.subheader(
-        " Revenue By Product Category"
-    )
-    category_sales = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-    )
-    fig_category = px.bar(
-        category_sales,
-        x="Product Category",
-        y="Total Amount",
-        text_auto=True,
-        title="Category Wise Revenue"
-    )
-    st.plotly_chart(
-        fig_category,
-        use_container_width=True
-    )
-    st.divider()
-    col5, col6 = st.columns(2)
-    with col5:
-        gender_sales = (
-            df.groupby("Gender")
-            ["Total Amount"]
-            .sum()
-            .reset_index()
-        )
-        fig_gender = px.pie(
-            gender_sales,
-            names="Gender",
-            values="Total Amount",
-            title="Revenue By Gender"
-        )
-        st.plotly_chart(
-            fig_gender,
-            use_container_width=True
-        )
-    with col6:
-        customer_sales = (
-            df.groupby("Customer Type")
-            ["Total Amount"]
-            .sum()
-            .reset_index()
-        )
-        fig_customer = px.bar(
-            customer_sales,
-            x="Customer Type",
-            y="Total Amount",
-            text_auto=True,
-            title="Customer Type Performance"
-        )
-        st.plotly_chart(
-            fig_customer,
-            use_container_width=True
-        )
-    st.divider()
-    st.subheader(
-        "Recent Sales Data"
-    )
-    st.dataframe(
-        df.head(10),
-        use_container_width=True
-    )
-if menu == "Sales Analysis":
-    st.header(
-        "Advanced Sales Analysis"
-    )
-    st.write(
-        "Detailed business sales insights."
-    )
-    st.divider()
-    category_sales = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-    )
-    fig1 = px.pie(
-        category_sales,
-        names="Product Category",
-        values="Total Amount",
-        title="Revenue Share By Category"
-    )
-    st.plotly_chart(
-        fig1,
-        use_container_width=True
-    )
-    if "Date" in df.columns:
-        monthly_sales = (
-            df.groupby(
-                df["Date"].dt.month
-            )
-            ["Total Amount"]
-            .sum()
-            .reset_index()
-        )
-        monthly_sales.columns = [
-            "Month",
-            "Revenue"
-        ]
-        fig2 = px.line(
-            monthly_sales,
-            x="Month",
-            y="Revenue",
-            markers=True,
-            title="Monthly Sales Trend"
-        )
-        st.plotly_chart(
-            fig2,
-            use_container_width=True
-        )
-if menu == "Customer AI":
-    st.header(
-        "customer Intelligence AI"
-    )
-    st.write(
-        "Analyze customer behaviour and value."
-    )
-    st.divider()
-    total_customers = df["Customer ID"].nunique()
-    avg_spend = df["Total Amount"].mean()
-    col1,col2 = st.columns(2)
-    with col1:
-        st.metric(
-            "Total Customers",
-            f"{total_customers:,}"
-        )
-    with col2:
-        st.metric(
-            "Average Customer Spend",
-            f" {avg_spend:,.0f}"
-        )
-    customer_value = (
-        df.groupby("Customer ID")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-        .sort_values(
-            "Total Amount",
-            ascending=False
-        )
-    )
-    st.subheader(
-        " Top Customers"
-    )
-    st.dataframe(
-        customer_value.head(10),
-        use_container_width=True
-    )
-if menu == "Churn Prediction":
-    st.header(
-        "Customer Churn Prediction"
-    )
-    st.write(
-        "Identify customers who may stop purchasing."
-    )
-    st.info(
-        "Machine Learning churn model can be connected here."
-    )
-    churn_threshold = st.slider(
-        "Select spending risk level",
-        0,
-        10000,
-        3000
-    )
-    risky_customers = df[
-        df["Total Amount"] < churn_threshold
-    ]
-    st.metric(
-        "Possible Risk Customers",
-        len(risky_customers)
-    )
-    st.dataframe(
-        risky_customers.head(10),
-        use_container_width=True
-    )
-if menu == "AI Prediction":
-    st.header(
-        "NexusCart AI Prediction Center"
-    )
-    st.caption(
-        "AI powered business prediction and decision support system"
-    )
-    st.divider()
-    prediction_type = st.selectbox(
-        "Select Prediction Type",
-        [
-            "Sales Prediction",
-            "Customer Behaviour Prediction",
-            "Product Demand Prediction",
-            "Revenue Prediction"
-        ]
-    )
 
-    st.divider()
-    if prediction_type == "Sales Prediction":
-        st.subheader(
-            "Future Sales Prediction"
-        )
-        current_sales = df["Total Amount"].sum()
-        growth = st.slider(
-            "Expected Growth (%)",
-            0,
-            100,
-            20
-        )
-        predicted_sales = current_sales + (
-            current_sales * growth / 100
-        )
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric(
-                "Current Sales",
-                f" {current_sales:,.0f}"
-            )
-        with col2:
-            st.metric(
-                "Predicted Sales",
-                f"{predicted_sales:,.0f}",
-                f"{growth}% Growth"
-            )
-    elif prediction_type == "Customer Behaviour Prediction":
-        st.subheader(
-            " Customer Behaviour Analysis"
-        )
-        avg_customer = (
-            df.groupby("Customer ID")
-            ["Total Amount"]
-            .sum()
-            .mean()
-        )
-        st.metric(
-            "Average Customer Spending",
-            f"₹ {avg_customer:,.0f}"
-        )
-        st.success(
-            "AI predicts customer purchasing behaviour based on sales history."
-        )
-    elif prediction_type == "Product Demand Prediction":
-        st.subheader(
-            " Product Demand Prediction"
-        )
-        demand = (
-            df.groupby("Product Category")
-            ["Total Amount"]
-            .sum()
-            .reset_index()
-            .sort_values(
-                "Total Amount",
-                ascending=False
-            )
-        )
-        st.write(
-            " High Demand Categories"
-        )
-        st.dataframe(
-            demand.head(5),
-            use_container_width=True
-        )
-    else:
-        st.subheader(
-            " Revenue Forecast"
-        )
-        monthly_avg = (
-            df["Total Amount"].sum()
-        ) / 12
-        st.metric(
-            "Expected Monthly Revenue",
-            f"₹ {monthly_avg:,.0f}"
-        )
-        st.info(
-            "Prediction generated using historical retail data."
-        )
-    st.divider()
-    st.success(
-        " AI Prediction Engine is Active"
-    )
-if menu == "AI Assistant":
-    st.header(
-        "NexusCart AI Assistant"
-    )
-    st.caption(
-        "Your intelligent retail business assistant"
-    )
-    st.divider()
-    st.subheader(
-        " Ask NexusCart AI"
-    )
-    user_question = st.text_input(
-        "Enter your business question"
-    )
-    if user_question:
-        question = user_question.lower()
-        if "sales" in question or "revenue" in question:
-            total_sales = df["Total Amount"].sum()
-            st.success(
-                f" Total Revenue Generated: ₹ {total_sales:,.0f}"
-            )
-        elif "order" in question:
-            total_orders = len(df)
-            st.success(
-                f" Total Orders: {total_orders:,}"
-            )
-        elif "customer" in question:
-            total_customers = df["Customer ID"].nunique()
-            st.success(
-                f" Total Customers: {total_customers:,}"
-            )
-        elif "best" in question or "top" in question or "product" in question:
-            best_category = (
-                df.groupby("Product Category")
-                ["Total Amount"]
-                .sum()
-                .idxmax()
-            )
-            st.success(
-                f" Highest Revenue Category: {best_category}"
-            )
-        elif "average" in question or "avg" in question:
-            average_order = df["Total Amount"].mean()
-            st.success(
-                f" Average Order Value: ₹ {average_order:,.0f}"
+        with open("style.css") as f:
+
+            st.markdown(
+
+                f"<style>{f.read()}</style>",
+
+                unsafe_allow_html=True
 
             )
-        else:
-            st.info(
-                "I can help you with sales, customers, orders, products and revenue analysis."
-            )
-    st.divider()
-    st.subheader(
-        "Likely Questions"
-    )
-    likely_questions = [
-        "What is total sales?",
-        "How many customers do we have?",
-        "What is the best product category?",
-        "What is average order value?",
-        "How many orders are completed?",
-        "Which category generates highest revenue?"
-    ]
-    for question in likely_questions:
-        st.info(
-            " " + question
-        )
-    st.divider()
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric(
-            " AI Status",
-            "Active"
-        )
-    with col2:
-        st.metric(
-            " Data Rows",
-            f"{len(df):,}"
-        )
-    with col3:
-        st.metric(
-            " Response",
-            "Instant"
-        )
-    st.success(
-        " NexusCart AI Assistant is ready!"
-    )
-if menu == "Sales Forecast":
-    st.header(
-        " AI Sales Forecast"
-    )
-    st.write(
-        "Future sales estimation using AI models."
-    )
-    daily_sales = (
-        df.groupby("Date")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-    )
-    if "Date" in df.columns:
-        fig_forecast = px.line(
-            daily_sales,
-            x="Date",
-            y="Total Amount",
-            title="Sales Trend"
-        )
-        st.plotly_chart(
-            fig_forecast,
-            use_container_width=True
-        )
-    st.success(
-        "Forecast module is ready for ML integration."
-    )
-if menu == "Recommendation":
-    st.header(
-        " AI Product Recommendation"
-    )
-    st.write(
-        "Recommended products based on sales performance."
-    )
-    recommendation = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-        .sort_values(
-            "Total Amount",
-            ascending=False
-        )
-    )
-    st.subheader(
-        "Top Recommended Categories"
-    )
-    st.dataframe(
-        recommendation.head(5),
-        use_container_width=True
-    )
-if menu == "Customer Support":
-    st.header(
-        " NexusCart AI Customer Support"
-    )
-    st.caption(
-        "AI Powered Retail Customer Assistance System"
-    )
-    st.divider()
-    st.subheader(
-        " Contact Support"
-    )
-    col1, col2 = st.columns(2)
-    with col1:
-        st.info(
-            """
-             Support Team
-            NexusCart AI Support
-             Email:
-            deghuriatapobrata@gmail.com
 
-             Mobile:
-            +91 8617546549
-            """
-        )
-    with col2:
-        st.success(
-            """
-             Support Hours
-            Monday - Saturday
-            9:00 AM - 6:00 PM
-            Response Time:
-            Within 24 Hours
-            """
-        )
-    st.divider()
-    st.subheader(
-        " Ask NexusCart AI"
-    )
-    query = st.text_input(
-        "Enter your question"
-    )
-    if query:
-        q = query.lower()
-        if "refund" in q:
-            st.warning(
-                "Refund requests are processed within 5-7 working days."
-            )
-        elif "delivery" in q:
-            st.info(
-                "Please provide your order ID to check delivery status."
-            )
-        elif "order" in q:
-            st.success(
-                "Your order details can be checked using customer ID."
-            )
-        else:
-            st.success(
-                "Thank you for contacting NexusCart AI Support. Our team will assist you."
-            )
-    st.divider()
-    st.subheader(
-        "🛠 Support Services"
-    )
-    support_data = {
-        "Service":[
-            "Order Tracking",
-            "Refund Support",
-            "Product Information",
-            "Complaint Handling",
-            "Feedback"
-        ],
-        "Status":[
-            "Active",
-            "Active",
-            "Active",
-            "Active",
-            "Active"
-        ]
-    }
-    st.dataframe(
-        pd.DataFrame(support_data),
-        use_container_width=True
-    )
-if menu == "About":
-    st.header(
-        "🛒 About NexusCart AI Pro"
-    )
-    st.caption(
-        "AI Powered Retail Business Intelligence Platform"
-    )
-    st.divider()
-    st.subheader(
-        " Project Overview"
-    )
-    st.write(
-        """
-        NexusCart AI Pro is an Artificial Intelligence based
-        Retail Business Intelligence Platform designed to analyze
-        sales performance, customer behaviour, and business trends.
+    except:
 
-        The platform converts raw retail data into meaningful
-        insights using Data Analytics, Machine Learning, and AI.
+        pass
 
-        It helps businesses understand revenue patterns,
-        customer segments, product performance, and future
-        sales opportunities.
-        """
-    )
-    st.divider()
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader(
-            " Project Developer"
-        )
-        st.write(
-            """
-            **Tapobrata Deghuria**
-            (BCA Student
-            Data Analytics & AI Enthusiast)
-            Developed:
-            NexusCart AI Pro
-            """
-        )
-    with col2:
-        st.subheader(
-            " Project Objective"
-        )
-        st.write(
-            """
-            • Analyze retail sales data
-            • Understand customer behaviour
-            • Predict business outcomes
-            • Generate AI-based insights
-            • Support data-driven decisions
-            """
-        )
-    st.divider()
-    st.subheader(
-        "Technologies & Tools Used"
-    )
-    st.write(
-        """
-        ###  Programming Language
-        • Python — Used for data processing,
-          analytics, automation, and AI development.
-        ###  Data Analysis
-        • Pandas — Data cleaning and manipulation.
-        • NumPy — Numerical calculations.
-        ###  Data Visualization
-        • Plotly — Interactive business charts.
-        • Streamlit — Web-based dashboard development.
-        ### Artificial Intelligence & Machine Learning
-        • Scikit-Learn — Machine learning model implementation.
-        • Predictive Analytics — Sales forecasting,
-          churn prediction, and customer analysis.
-        ###  Database Technology
-        • SQL — Data storage, querying, and analysis.
-        ###  Business Intelligence
-        • Power BI — Advanced dashboards and reporting.
-        • Microsoft Excel — Data preparation and analysis.
-        ###  Development Tools
-        • Git & GitHub — Version control and project management.
-        • VS Code — Application development environment.
-        """
-    )
-    st.divider()
-    st.subheader(
-        " Key Features"
-    )
-    features = [
-        " Business Intelligence Dashboard",
-        " Sales Analysis",
-        " Customer Intelligence",
-        " Churn Prediction",
-        " AI Assistant",
-        " Sales Forecasting",
-        " Product Recommendation",
-        " AI Prediction System"
-    ]
-    for feature in features:
-        st.success(feature)
-    st.divider()
-    st.info(
-        "🛒 NexusCart AI Pro | Developed by Tapobrata Deghuria"
-    )
-if menu == "AI Report Generator":
-    st.header(
-        " AI Business Report Generator"
-    )
-    st.caption(
-        "Generate automated retail business reports"
-    )
-    st.divider()
-    total_revenue = df["Total Amount"].sum()
-    total_orders = len(df)
-    total_customers = df["Customer ID"].nunique()
-    top_category = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .idxmax()
-    )
-    st.subheader(
-        "Report Preview"
-    )
-    col1,col2,col3 = st.columns(3)
-    with col1:
-        st.metric(
-            "Total Revenue",
-            f"₹ {total_revenue:,.0f}"
-        )
-    with col2:
-        st.metric(
-            "Total Orders",
-            total_orders
-        )
-    with col3:
-        st.metric(
-            "Customers",
-            total_customers
-        )
-    st.success(
-        f"Best Category: {top_category}"
-    )
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-    from reportlab.lib.styles import getSampleStyleSheet
-    if st.button(
-        "Generate PDF Report"
-    ):
-        file_name = "NexusCart_Business_Report.pdf"
-        doc = SimpleDocTemplate(
-            file_name
-        )
-        styles = getSampleStyleSheet()
-        content = []
-        content.append(
-            Paragraph(
-                "NexusCart AI Pro Business Report",
-                styles["Title"]
-            )
-        )
-        content.append(
-            Spacer(1,20)
-        )
-        report_text = f"""
-        Total Revenue: ₹ {total_revenue:,.0f}
-        Total Orders: {total_orders}
-        Total Customers: {total_customers}
-        Best Performing Category: {top_category}
-        Generated using NexusCart AI Pro.
-        """
-        content.append(
-            Paragraph(
-                report_text,
-                styles["BodyText"]
-            )
-        )
-        doc.build(content)
-        with open(file_name,"rb") as pdf:
-            st.download_button(
-                label="⬇ Download Report",
-                data=pdf,
-                file_name=file_name,
-                mime="application/pdf"
-            )
-elif menu == "AI Business Insights":
-    st.header(" AI Business Insights")
-    st.write(
-        "Automatically generated business intelligence summary"
-    )
-    st.divider()
-    total_revenue = df["Total Amount"].sum()
-    total_orders = len(df)
-    avg_order = total_revenue / total_orders
-    best_category = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .idxmax()
-    )
-    category_revenue = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .max()
-    )
-    top_customer_type = (
-        df.groupby("Customer Type")
-        ["Total Amount"]
-        .sum()
-        .idxmax()
-    )
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric(
-            " Total Revenue",
-            f"₹ {total_revenue:,.0f}"
-        )
-    with col2:
-        st.metric(
-            " Total Orders",
-            total_orders
-        )
-    with col3:
-        st.metric(
-            " Avg Order Value",
-            f"₹ {avg_order:,.0f}"
-        )
-    st.divider()
-    st.subheader(" AI Generated Business Summary")
-    insights = []
-    insights.append(
-        f" Best performing category is {best_category} generating ₹{category_revenue:,.0f} revenue."
-    )
-    insights.append(
-        f" {top_customer_type} customers contribute the highest revenue."
-    )
-    if avg_order > 1000:
-        insights.append(
-            "Average order value is strong. Consider premium product promotions."
-        )
-    else:
-        insights.append(
-            " Increase basket size using discounts and bundles."
-        )
-    insights.append(
-        "Recommendation: Focus marketing campaigns on high-value customers."
-    )
-    for item in insights:
-        st.success(item)
-    st.divider()
-    st.subheader("Category Performance")
-    category_df = (
-        df.groupby("Product Category")
-        ["Total Amount"]
-        .sum()
-        .reset_index()
-    )
-    fig = px.bar(
-        category_df,
-        x="Product Category",
-        y="Total Amount",
-        text_auto=True,
-        title="Revenue By Category"
-    )
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-elif menu == "Customer Feedback":
-    st.title(" Customer Feedback")
-    st.write("We value your feedback! Please share your experience with NexusCart AI Pro.")
-    import os
-    import pandas as pd
-    feedback_file = "customer_feedback.csv"
-    with st.form("feedback_form"):
-        name = st.text_input(" Your Name")
-        email = st.text_input("Email")
-        rating = st.slider(
-            "Overall Rating",
-            1,
-            5,
-            5
-        )
-        feedback = st.text_area(
-            " Your Feedback"
-        )
-        submitted = st.form_submit_button("Submit Feedback")
-        if submitted:
-            if name == "" or feedback == "":
-                st.error("Please fill all required fields.")
-            else:
-                new_feedback = pd.DataFrame({
-                    "Name": [name],
-                    "Email": [email],
-                    "Rating": [rating],
-                    "Feedback": [feedback]
-                })
-                if os.path.exists(feedback_file):
-                    old_feedback = pd.read_csv(feedback_file)
-                    updated_feedback = pd.concat(
-                        [old_feedback, new_feedback],
-                        ignore_index=True
-                    )
-                    updated_feedback.to_csv(
-                        feedback_file,
-                        index=False
-                    )
-                else:
-                    new_feedback.to_csv(
-                        feedback_file,
-                        index=False
-                    )
 
-                st.success(" Thank you! Your feedback has been submitted.")
-    st.divider()
-    st.subheader(" Customer Reviews")
-    if os.path.exists(feedback_file):
-        reviews = pd.read_csv(feedback_file)
-        st.dataframe(
-            reviews,
-            use_container_width=True
-        )
-    else:
-        st.info("No feedback available yet.")
-st.subheader(" What Our Users Say")
-st.metric(" Average Rating", "4.7 / 5")
-st.metric(" Total Reviews", "127")
 
-reviews = [
-    {
-        "name": "Rahul Sharma",
-        "rating": "⭐⭐⭐⭐⭐",
-        "comment": "Excellent dashboard! The sales insights are very useful and easy to understand."
-    },
-    {
-        "name": "Priya Das",
-        "rating": "⭐⭐⭐⭐⭐",
-        "comment": "The AI Prediction feature helped us identify customer trends quickly."
-    },
-    {
-        "name": "Amit Kumar",
-        "rating": "⭐⭐⭐⭐",
-        "comment": "Beautiful UI and smooth experience. Looking forward to more features."
-    },
-    {
-        "name": "Sneha Roy",
-        "rating": "⭐⭐⭐⭐⭐",
-        "comment": "Customer Churn Prediction is amazing. Great project!"
-    },
-    {
-        "name": "Rohit Singh",
-        "rating": "⭐⭐⭐⭐⭐",
-        "comment": "Professional dashboard with impressive analytics and AI recommendations."
-    }
+load_css()
+
+
+
+# ==========================================================
+# DATA GENERATION
+# Replace with retail_sales.csv later
+# ==========================================================
+
+
+np.random.seed(42)
+
+
+categories = [
+
+    "Electronics",
+
+    "Fashion",
+
+    "Beauty",
+
+    "Furniture",
+
+    "Groceries"
+
 ]
-for review in reviews:
-    with st.container():
-        st.markdown(f"###  {review['name']}")
-        st.markdown(review["rating"])
-        st.write(review["comment"])
-        st.divider()
-#footer
-st.sidebar.divider()
-st.sidebar.caption(
-    "🛒 NexusCart AI Pro"
-)
-st.sidebar.caption(
-    "Developed by: Tapobrata Deghuria"
-)
-st.sidebar.caption(
-    "Python | Streamlit | Machine Learning | AI"
-)
-st.sidebar.caption(
-    "© 2026 All Rights Reserved"
+
+
+months = [
+
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+
+]
+
+
+
+df = pd.DataFrame({
+
+    "Month":months,
+
+    "Sales":np.random.randint(
+
+        30000,
+
+        90000,
+
+        12
+
+    ),
+
+    "Orders":np.random.randint(
+
+        100,
+
+        500,
+
+        12
+
+    )
+
+})
+
+
+
+# ==========================================================
+# SIDEBAR NAVIGATION
+# ==========================================================
+
+
+with st.sidebar:
+
+
+    st.markdown(
+
+        """
+
+        <h2 style="text-align:center">
+
+        🛒 NexusCart AI
+
+        </h2>
+
+        """,
+
+        unsafe_allow_html=True
+
+    )
+
+
+    st.write("")
+
+
+    selected = option_menu(
+
+        menu_title=None,
+
+
+        options=[
+
+
+            "Dashboard",
+
+            "Sales",
+
+            "Products",
+
+            "Customers",
+
+            "AI Prediction",
+
+            "Forecast",
+
+            "Recommendation",
+
+            "Reports",
+
+            "Settings"
+
+        ],
+
+
+        icons=[
+
+
+            "speedometer2",
+
+            "bar-chart",
+
+            "box",
+
+            "people",
+
+            "cpu",
+
+            "graph-up",
+
+            "stars",
+
+            "file-earmark",
+
+            "gear"
+
+        ],
+
+
+        default_index=0
+
+    )
+
+
+
+    st.divider()
+
+
+
+    st.success(
+
+        "🟢 System Online"
+
+    )
+
+
+    st.caption(
+
+        "AI Engine Active"
+
+    )
+
+
+    st.caption(
+
+        "© 2026 NexusCart AI"
+
+    )
+
+
+
+
+
+# ==========================================================
+# HEADER
+# ==========================================================
+
+
+left,right = st.columns([8,2])
+
+
+
+with left:
+
+
+    st.markdown(
+
+        """
+
+        <h1>
+
+        Welcome Back 👋
+
+        </h1>
+
+        """,
+
+        unsafe_allow_html=True
+
+    )
+
+
+    st.caption(
+
+        "AI Powered Retail Intelligence Platform"
+
+    )
+
+
+
+with right:
+
+
+    st.metric(
+
+        "Today",
+
+        datetime.now().strftime(
+
+            "%d %b %Y"
+
+        )
+
+    )
+
+
+
+st.write("")
+
+
+
+# ==========================================================
+# KPI CARDS
+# ==========================================================
+
+
+c1,c2,c3,c4 = st.columns(4)
+
+
+
+with c1:
+
+
+    st.metric(
+
+        "💰 Revenue",
+
+        "₹12,54,320",
+
+        "+12.5%"
+
+    )
+
+
+
+with c2:
+
+
+    st.metric(
+
+        "📦 Orders",
+
+        "8452",
+
+        "+8.2%"
+
+    )
+
+
+
+with c3:
+
+
+    st.metric(
+
+        "👥 Customers",
+
+        "3245",
+
+        "+5.4%"
+
+    )
+
+
+with c4:
+
+
+    st.metric(
+
+        "📈 Profit",
+
+        "₹4,32,510",
+
+        "+15%"
+
+    )
+
+
+
+st.divider()
+
+
+
+# ==========================================================
+# DASHBOARD TITLE
+# ==========================================================
+
+
+if selected == "Dashboard":
+
+
+    st.subheader(
+
+        "📊 Executive Dashboard"
+
+    )
+
+
+    st.info(
+
+        "Dashboard analytics will be added in Part 2."
+
+    )
+    # ==========================================================
+# PART 2 : DASHBOARD ANALYTICS
+# ==========================================================
+
+
+if selected == "Dashboard":
+
+
+    # ------------------------------------------------------
+    # SALES ANALYTICS + DONUT
+    # ------------------------------------------------------
+
+
+    left_chart, right_chart = st.columns([3,1])
+
+
+
+    with left_chart:
+
+
+        sales_chart = go.Figure()
+
+
+
+        sales_chart.add_trace(
+
+            go.Scatter(
+
+                x=df["Month"],
+
+                y=df["Sales"],
+
+                mode="lines+markers",
+
+                name="Revenue",
+
+                line=dict(
+
+                    width=4
+
+                ),
+
+                marker=dict(
+
+                    size=8
+
+                )
+
+            )
+
+        )
+
+
+
+        sales_chart.add_trace(
+
+            go.Scatter(
+
+                x=df["Month"],
+
+                y=df["Orders"]*200,
+
+                mode="lines",
+
+                name="Orders",
+
+                line=dict(
+
+                    width=3,
+
+                    dash="dot"
+
+                )
+
+            )
+
+        )
+
+
+
+        sales_chart.update_layout(
+
+            title="📈 Sales Performance",
+
+            height=400,
+
+            template="plotly_white"
+
+        )
+
+
+
+        st.plotly_chart(
+
+            sales_chart,
+
+            use_container_width=True
+
+        )
+
+
+
+
+
+    # ------------------------------------------------------
+    # DONUT CHART
+    # ------------------------------------------------------
+
+
+    with right_chart:
+
+
+
+        revenue_source = pd.DataFrame({
+
+            "Source":[
+
+                "Online",
+
+                "Offline",
+
+                "Wholesale",
+
+                "Other"
+
+            ],
+
+
+            "Value":[
+
+                45,
+
+                30,
+
+                15,
+
+                10
+
+            ]
+
+        })
+
+
+
+        donut = px.pie(
+
+            revenue_source,
+
+            names="Source",
+
+            values="Value",
+
+            hole=0.6,
+
+            title="Revenue Source"
+
+        )
+
+
+
+        st.plotly_chart(
+
+            donut,
+
+            use_container_width=True
+
+        )
+
+
+
+
+
+    st.divider()
+
+
+
+    # ------------------------------------------------------
+    # CATEGORY PERFORMANCE
+    # ------------------------------------------------------
+
+
+    st.subheader(
+
+        "🏆 Top Categories"
+
+    )
+
+
+
+    category_df = pd.DataFrame({
+
+
+        "Category":[
+
+            "Electronics",
+
+            "Fashion",
+
+            "Furniture",
+
+            "Beauty",
+
+            "Groceries"
+
+        ],
+
+
+        "Sales":[
+
+            450000,
+
+            320000,
+
+            270000,
+
+            180000,
+
+            150000
+
+        ]
+
+    })
+
+
+
+    category_chart = px.bar(
+
+        category_df,
+
+        x="Category",
+
+        y="Sales",
+
+        text="Sales",
+
+        title="Category Revenue"
+
+    )
+
+
+
+    st.plotly_chart(
+
+        category_chart,
+
+        use_container_width=True
+
+    )
+
+
+
+
+
+    # ------------------------------------------------------
+    # SMALL KPI
+    # ------------------------------------------------------
+
+
+    st.write("")
+
+
+
+    a,b,c,d = st.columns(4)
+
+
+
+    with a:
+
+
+        st.success(
+
+            "⭐ Best Seller"
+
+        )
+
+
+        st.metric(
+
+            "Laptop",
+
+            "1245 Sold"
+
+        )
+
+
+
+    with b:
+
+
+        st.info(
+
+            "🛒 Avg Basket"
+
+        )
+
+
+        st.metric(
+
+            "₹1540",
+
+            "+8%"
+
+        )
+
+
+
+    with c:
+
+
+        st.warning(
+
+            "👥 Returning"
+
+        )
+
+
+        st.metric(
+
+            "68%",
+
+            "+4%"
+
+        )
+
+
+
+    with d:
+
+
+        st.error(
+
+            "📦 Pending"
+
+        )
+
+
+        st.metric(
+
+            "53",
+
+            "-9%"
+
+        )
+
+
+
+
+
+    st.divider()
+
+
+
+    # ------------------------------------------------------
+    # RECENT ORDERS
+    # ------------------------------------------------------
+
+
+    st.subheader(
+
+        "📦 Recent Orders"
+
+    )
+
+
+
+    orders = pd.DataFrame({
+
+
+        "Order ID":[
+
+            "#1001",
+
+            "#1002",
+
+            "#1003",
+
+            "#1004",
+
+            "#1005"
+
+        ],
+
+
+        "Customer":[
+
+            "Rahul",
+
+            "Priya",
+
+            "Amit",
+
+            "Sneha",
+
+            "Rohan"
+
+        ],
+
+
+        "Category":[
+
+            "Electronics",
+
+            "Fashion",
+
+            "Beauty",
+
+            "Furniture",
+
+            "Groceries"
+
+        ],
+
+
+        "Amount":[
+
+            1240,
+
+            3400,
+
+            875,
+
+            9250,
+
+            1420
+
+        ],
+
+
+        "Status":[
+
+            "Completed",
+
+            "Pending",
+
+            "Completed",
+
+            "Delivered",
+
+            "Cancelled"
+
+        ]
+
+    })
+
+
+
+    st.dataframe(
+
+        orders,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+
+
+
+
+    # ------------------------------------------------------
+    # PROFIT ANALYSIS
+    # ------------------------------------------------------
+
+
+    st.write("")
+
+
+
+    profit = pd.DataFrame({
+
+        "Month":months,
+
+        "Profit":np.random.randint(
+
+            5000,
+
+            25000,
+
+            12
+
+        )
+
+    })
+
+
+
+    profit_chart = px.area(
+
+        profit,
+
+        x="Month",
+
+        y="Profit",
+
+        title="Monthly Profit Growth"
+
+    )
+
+
+
+    st.plotly_chart(
+
+        profit_chart,
+
+        use_container_width=True
+
+    )
+    # ==========================================================
+# PART 3 : SALES + PRODUCTS + CUSTOMER AI
+# ==========================================================
+
+
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+
+
+# ==========================================================
+# SALES PAGE
+# ==========================================================
+
+
+if selected == "Sales":
+
+
+    st.subheader(
+        "📊 Sales Intelligence"
+    )
+
+
+    sales_data = pd.DataFrame({
+
+        "Category":[
+            "Electronics",
+            "Fashion",
+            "Beauty",
+            "Furniture",
+            "Groceries"
+        ],
+
+        "Revenue":[
+            450000,
+            320000,
+            180000,
+            270000,
+            150000
+        ],
+
+        "Orders":[
+            1200,
+            950,
+            600,
+            450,
+            800
+        ]
+
+    })
+
+
+    col1,col2 = st.columns(2)
+
+
+
+    with col1:
+
+
+        fig = px.bar(
+
+            sales_data,
+
+            x="Category",
+
+            y="Revenue",
+
+            title="Revenue By Category",
+
+            text="Revenue"
+
+        )
+
+
+        st.plotly_chart(
+
+            fig,
+
+            use_container_width=True
+
+        )
+
+
+
+    with col2:
+
+
+        fig = px.pie(
+
+            sales_data,
+
+            names="Category",
+
+            values="Revenue",
+
+            hole=0.5,
+
+            title="Revenue Distribution"
+
+        )
+
+
+        st.plotly_chart(
+
+            fig,
+
+            use_container_width=True
+
+        )
+
+
+
+    st.subheader(
+
+        "📈 Sales Growth"
+
+    )
+
+
+    growth = pd.DataFrame({
+
+        "Month":months,
+
+        "Revenue":np.random.randint(
+
+            30000,
+
+            90000,
+
+            12
+
+        )
+
+    })
+
+
+    fig = px.line(
+
+        growth,
+
+        x="Month",
+
+        y="Revenue",
+
+        markers=True,
+
+        title="Monthly Revenue"
+
+    )
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+
+
+
+# ==========================================================
+# PRODUCTS PAGE
+# ==========================================================
+
+
+if selected == "Products":
+
+
+    st.subheader(
+
+        "📦 Product Analytics"
+
+    )
+
+
+    products = pd.DataFrame({
+
+        "Product":[
+
+            "Laptop",
+
+            "Mobile",
+
+            "Shoes",
+
+            "Watch",
+
+            "Furniture"
+
+        ],
+
+        "Sales":[
+
+            1250,
+
+            2100,
+
+            950,
+
+            780,
+
+            430
+
+        ],
+
+        "Stock":[
+
+            120,
+
+            250,
+
+            80,
+
+            60,
+
+            40
+
+        ]
+
+    })
+
+
+
+    fig = px.bar(
+
+        products,
+
+        x="Product",
+
+        y="Sales",
+
+        title="Top Selling Products",
+
+        text="Sales"
+
+    )
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    st.subheader(
+
+        "Inventory Status"
+
+    )
+
+
+    st.dataframe(
+
+        products,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+
+
+
+
+# ==========================================================
+# CUSTOMERS AI SEGMENTATION
+# ==========================================================
+
+
+if selected == "Customers":
+
+
+    st.subheader(
+
+        "🤖 AI Customer Segmentation"
+
+    )
+
+
+    st.write(
+
+        """
+        KMeans Machine Learning groups customers
+        based on purchasing behaviour.
+        """
+
+    )
+
+
+    customer_data = pd.DataFrame({
+
+        "Age":np.random.randint(
+
+            18,
+
+            60,
+
+            200
+
+        ),
+
+        "Purchase":np.random.randint(
+
+            500,
+
+            10000,
+
+            200
+
+        ),
+
+        "Frequency":np.random.randint(
+
+            1,
+
+            20,
+
+            200
+
+        )
+
+    })
+
+
+
+    scaler = StandardScaler()
+
+
+
+    scaled = scaler.fit_transform(
+
+        customer_data
+
+    )
+
+
+
+    cluster_number = st.slider(
+
+        "Select Customer Groups",
+
+        2,
+
+        6,
+
+        3
+
+    )
+
+
+
+    model = KMeans(
+
+        n_clusters=cluster_number,
+
+        random_state=42,
+
+        n_init=10
+
+    )
+
+
+
+    customer_data["Segment"] = model.fit_predict(
+
+        scaled
+
+    )
+
+
+
+    st.success(
+
+        "Customer Segmentation Completed"
+
+    )
+
+
+
+    fig = px.scatter(
+
+        customer_data,
+
+        x="Purchase",
+
+        y="Frequency",
+
+        color="Segment",
+
+        title="Customer Groups"
+
+    )
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+
+    st.subheader(
+
+        "Segment Data"
+
+    )
+
+
+    st.dataframe(
+
+        customer_data,
+
+        use_container_width=True
+
+    )
+    # ==========================================================
+# PART 4 : AI PREDICTION + SALES FORECAST
+# ==========================================================
+
+
+from sklearn.linear_model import LinearRegression
+
+
+
+# ==========================================================
+# AI PREDICTION PAGE
+# ==========================================================
+if selected == "AI Prediction":
+
+    st.title("🤖 NexusCart AI Purchase Prediction")
+
+    st.write(
+        "Predict customer purchase amount using Machine Learning"
+    )
+
+
+    transaction_id = st.text_input(
+        "Transaction ID",
+        "T1001"
+    )
+
+    customer_id = st.text_input(
+        "Customer ID",
+        "C1001"
+    )
+
+    gender = st.selectbox(
+        "Gender",
+        ["Male", "Female"]
+    )
+
+    age = st.number_input(
+        "Age",
+        min_value=1,
+        max_value=100,
+        value=25
+    )
+
+    category = st.selectbox(
+        "Product Category",
+        [
+            "Electronics",
+            "Clothing",
+            "Beauty",
+            "Home"
+        ]
+    )
+
+    quantity = st.number_input(
+        "Quantity",
+        min_value=1,
+        value=1
+    )
+
+    price = st.number_input(
+        "Price per Unit",
+        min_value=1.0,
+        value=500.0
+    )
+
+    age_group = st.selectbox(
+        "Age Group",
+        ["Young", "Adult", "Senior"]
+    )
+
+    order_size = st.selectbox(
+        "Order Size",
+        ["Small", "Medium", "Large"]
+    )
+
+    revenue_category = st.selectbox(
+        "Revenue Category",
+        ["Low", "Medium", "High"]
+    )
+
+    customer_type = st.selectbox(
+        "Customer Type",
+        ["New", "Returning"]
+    )
+
+if st.button("Predict Purchase Amount"):
+
+    input_data = pd.DataFrame(
+        [[
+            1001,   # Transaction ID
+            20260101, # Date
+            1001,   # Customer ID
+            1,      # Gender (Male=1)
+            age,
+            1,      # Product Category
+            quantity,
+            price,
+            1,      # Age Group
+            1,      # Order Size
+            1,      # Revenue Category
+            1       # Customer Type
+        ]],
+        columns=[
+            "Transaction ID",
+            "Date",
+            "Customer ID",
+            "Gender",
+            "Age",
+            "Product Category",
+            "Quantity",
+            "Price per Unit",
+            "Age Group",
+            "Order Size",
+            "Revenue Category",
+            "Customer Type"
+        ]
+    )
+
+
+    prediction = model.predict(input_data)
+
+
+    st.success(
+        f"Predicted Purchase Amount: ₹ {prediction[0]:,.2f}"
+    )
+    
+         
+
+
+# ==========================================================
+# FORECAST PAGE
+# ==========================================================
+
+
+if selected == "Forecast":
+
+
+    st.subheader(
+
+        "📈 AI Sales Forecast"
+
+    )
+
+
+    st.write(
+
+        """
+        Predict future sales using Linear Regression.
+        """
+
+    )
+
+
+
+    forecast_data = pd.DataFrame({
+
+        "Month_Number":range(1,13),
+
+
+        "Sales":np.random.randint(
+
+            30000,
+
+            90000,
+
+            12
+
+        )
+
+    })
+
+
+
+    X = forecast_data[
+
+        ["Month_Number"]
+
+    ]
+
+
+    y = forecast_data["Sales"]
+
+
+
+    forecast_model = LinearRegression()
+
+
+
+    forecast_model.fit(
+
+        X,
+
+        y
+
+    )
+
+
+
+    next_month = 13
+
+
+
+    future_sales = forecast_model.predict(
+
+        [[next_month]]
+
+    )[0]
+
+
+
+    col1,col2 = st.columns(2)
+
+
+
+    with col1:
+
+
+        st.metric(
+
+            "Next Month Prediction",
+
+            f"₹ {future_sales:,.0f}"
+
+        )
+
+
+
+    with col2:
+
+
+        st.metric(
+
+            "Average Sales",
+
+            f"₹ {y.mean():,.0f}"
+
+        )
+
+
+
+
+    st.divider()
+
+
+
+    fig = px.line(
+
+        forecast_data,
+
+        x="Month_Number",
+
+        y="Sales",
+
+        markers=True,
+
+        title="Sales Forecast Trend"
+
+    )
+
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+
+    st.subheader(
+
+        "Forecast Table"
+
+    )
+
+
+    st.dataframe(
+
+        forecast_data,
+
+        use_container_width=True
+
+    )
+    # ==========================================================
+# PART 5 : RECOMMENDATION + REPORTS + SETTINGS + FOOTER
+# ==========================================================
+
+
+
+# ==========================================================
+# RECOMMENDATION PAGE
+# ==========================================================
+
+
+if selected == "Recommendation":
+
+
+    st.subheader(
+
+        "⭐ AI Recommendation Engine"
+
+    )
+
+
+    st.write(
+
+        """
+        AI recommends popular products based on
+        sales performance.
+        """
+
+    )
+
+
+    recommendation_data = pd.DataFrame({
+
+
+        "Product":[
+
+            "Laptop",
+
+            "Smartphone",
+
+            "Headphone",
+
+            "Shoes",
+
+            "Smart Watch",
+
+            "Furniture"
+
+        ],
+
+
+        "Demand":[
+
+            95,
+
+            90,
+
+            85,
+
+            70,
+
+            65,
+
+            50
+
+        ]
+
+    })
+
+
+
+    top_product = recommendation_data.loc[
+
+        recommendation_data["Demand"].idxmax(),
+
+        "Product"
+
+    ]
+
+
+
+    st.success(
+
+        f"🔥 Recommended Product : {top_product}"
+
+    )
+
+
+
+    fig = px.bar(
+
+        recommendation_data,
+
+        x="Product",
+
+        y="Demand",
+
+        title="Product Demand Analysis",
+
+        text="Demand"
+
+    )
+
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+
+    st.dataframe(
+
+        recommendation_data,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+
+
+
+
+
+# ==========================================================
+# REPORTS PAGE
+# ==========================================================
+
+
+if selected == "Reports":
+
+
+    st.subheader(
+
+        "📑 Business Reports"
+
+    )
+
+
+    report_data = pd.DataFrame({
+
+
+        "Metric":[
+
+            "Total Revenue",
+
+            "Total Orders",
+
+            "Customers",
+
+            "Profit"
+
+        ],
+
+
+        "Value":[
+
+            "₹12,54,320",
+
+            "8452",
+
+            "3245",
+
+            "₹4,32,510"
+
+        ]
+
+    })
+
+
+
+    st.dataframe(
+
+        report_data,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+
+
+    csv = report_data.to_csv(
+
+        index=False
+
+    )
+
+
+
+    st.download_button(
+
+        label="📥 Download Report",
+
+        data=csv,
+
+        file_name="NexusCart_Report.csv",
+
+        mime="text/csv"
+
+    )
+
+
+
+
+
+# ==========================================================
+# SETTINGS PAGE
+# ==========================================================
+
+
+if selected == "Settings":
+
+
+    st.subheader(
+
+        "⚙️ System Settings"
+
+    )
+
+
+    st.toggle(
+
+        "Enable AI Suggestions",
+
+        value=True
+
+    )
+
+
+    st.toggle(
+
+        "Enable Forecast Model",
+
+        value=True
+
+    )
+
+
+    st.toggle(
+
+        "Enable Customer Analytics",
+
+        value=True
+
+    )
+
+
+
+    st.info(
+
+        """
+        NexusCart AI Pro System
+
+        Version : 1.0
+
+        Status : Active
+
+        AI Engine : Running
+
+        """
+
+    )
+
+
+
+
+
+# ==========================================================
+# FOOTER
+# ==========================================================
+
+
+st.divider()
+
+
+
+st.markdown(
+
+    """
+
+    <center>
+
+    🛒 <b>NexusCart AI Pro</b>
+
+    <br>
+
+    AI Powered Retail Intelligence Platform
+
+    <br>
+
+    Built with Python • Streamlit • Machine Learning
+
+    <br>
+
+    © 2026 All Rights Reserved
+
+    </center>
+
+    """,
+
+    unsafe_allow_html=True
+
 )

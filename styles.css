@@ -1,0 +1,341 @@
+/* =====================================================
+   NEXUSCART AI - PREMIUM DASHBOARD CSS
+======================================================*/
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+html,
+body,
+[class*="css"]{
+    font-family:'Poppins',sans-serif;
+}
+
+/* -------------------------------------------------- */
+/* MAIN APP */
+/* -------------------------------------------------- */
+
+.stApp{
+
+    background:linear-gradient(
+        135deg,
+        #dbeafe 0%,
+        #eef4ff 40%,
+        #edf7f2 100%
+    );
+
+}
+
+/* -------------------------------------------------- */
+/* SIDEBAR */
+/* -------------------------------------------------- */
+
+section[data-testid="stSidebar"]{
+
+    background:#14163b;
+
+    color:white;
+
+    border-top-right-radius:25px;
+
+    border-bottom-right-radius:25px;
+
+    border:none;
+
+}
+
+section[data-testid="stSidebar"] *{
+
+    color:white;
+
+}
+
+/* -------------------------------------------------- */
+/* OPTION MENU */
+/* -------------------------------------------------- */
+
+.nav-link{
+
+    border-radius:12px !important;
+
+    margin-bottom:8px;
+
+    transition:.3s;
+
+}
+
+.nav-link:hover{
+
+    background:#23265e !important;
+
+    transform:translateX(4px);
+
+}
+
+.nav-link-selected{
+
+    background:#ff9800 !important;
+
+    color:white !important;
+
+}
+
+/* -------------------------------------------------- */
+/* KPI METRIC CARDS */
+/* -------------------------------------------------- */
+
+div[data-testid="metric-container"]{
+
+    background:white;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    border:1px solid #eef2ff;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+div[data-testid="metric-container"]:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,.12);
+
+}
+
+/* -------------------------------------------------- */
+/* CHART CONTAINER */
+/* -------------------------------------------------- */
+
+div[data-testid="stPlotlyChart"]{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.08);
+
+}
+
+/* -------------------------------------------------- */
+/* TABLE */
+/* -------------------------------------------------- */
+
+div[data-testid="stDataFrame"]{
+
+    background:white;
+
+    padding:12px;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.08);
+
+}
+
+/* -------------------------------------------------- */
+/* BUTTON */
+/* -------------------------------------------------- */
+
+.stButton>button{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#1d4ed8;
+
+    color:white;
+
+    font-weight:600;
+
+    height:45px;
+
+    transition:.3s;
+
+}
+
+.stButton>button:hover{
+
+    background:#2563eb;
+
+    transform:translateY(-2px);
+
+}
+
+/* -------------------------------------------------- */
+/* INPUT */
+/* -------------------------------------------------- */
+
+.stTextInput input{
+
+    border-radius:12px;
+
+    border:1px solid #dbeafe;
+
+}
+
+/* -------------------------------------------------- */
+/* SELECT BOX */
+/* -------------------------------------------------- */
+
+.stSelectbox{
+
+    border-radius:12px;
+
+}
+
+/* -------------------------------------------------- */
+/* HEADINGS */
+/* -------------------------------------------------- */
+
+h1{
+
+    color:#111827;
+
+    font-weight:700;
+
+}
+
+h2{
+
+    color:#111827;
+
+    font-weight:700;
+
+}
+
+h3{
+
+    color:#1f2937;
+
+    font-weight:600;
+
+}
+
+/* -------------------------------------------------- */
+/* DIVIDER */
+/* -------------------------------------------------- */
+
+hr{
+
+    border:1px solid #edf2f7;
+
+}
+
+/* -------------------------------------------------- */
+/* INFO / SUCCESS */
+/* -------------------------------------------------- */
+
+.stAlert{
+
+    border-radius:14px;
+
+}
+
+/* -------------------------------------------------- */
+/* SCROLLBAR */
+/* -------------------------------------------------- */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#94a3b8;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#f8fafc;
+
+}
+
+/* -------------------------------------------------- */
+/* REMOVE STREAMLIT DEFAULT HEADER */
+/* -------------------------------------------------- */
+
+header{
+
+    visibility:hidden;
+
+}
+
+footer{
+
+    visibility:hidden;
+
+}
+
+#MainMenu{
+
+    visibility:hidden;
+
+}
+
+/* -------------------------------------------------- */
+/* PAGE PADDING */
+/* -------------------------------------------------- */
+
+.block-container{
+
+    padding-top:2rem;
+
+    padding-left:2rem;
+
+    padding-right:2rem;
+
+    padding-bottom:2rem;
+
+}
+
+/* -------------------------------------------------- */
+/* CARD ANIMATION */
+/* -------------------------------------------------- */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+div[data-testid="metric-container"],
+div[data-testid="stPlotlyChart"],
+div[data-testid="stDataFrame"]{
+
+    animation:fadeUp .6s ease;
+
+}
