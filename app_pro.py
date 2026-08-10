@@ -570,10 +570,9 @@ elif menu == "👥 Customer AI":
     else:
         st.warning("Not enough customers for segmentation.")
 
-
 # ======================= CHURN PREDICTION ======================
 
-elif menu == "⚠️ Churn Prediction":
+if menu == "⚠️ Churn Prediction":
     st.markdown('<div class="section-title">⚠️ Customer Churn Intelligence</div>', unsafe_allow_html=True)
 
     customer = filtered.groupby("Customer ID").agg(
@@ -948,7 +947,12 @@ elif menu == "⚙️ Model Center":
 
 
 # --------------------------- Footer ----------------------------
-
+st.markdown(
+    "<div style='text-align:center; padding:20px;'>"
+    "Developed by Tapobrata Deghuria"
+    "</div>",
+    unsafe_allow_html=True
+)
 st.divider()
 st.caption(
     "🛒 NexusCart AI Pro • Retail Intelligence Platform • "
