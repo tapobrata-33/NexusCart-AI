@@ -1,79 +1,412 @@
+# ==========================================================
+# NEXUS CART AI
+# REAL MACHINE LEARNING MODEL TRAINING
+# ==========================================================
+
+
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, r2_score
+import numpy as np
+
 import joblib
 
 
-# Load dataset
-df = pd.read_csv("retail_sales.csv")
+from sklearn.model_selection import train_test_split
 
-print("Dataset Loaded")
+
+from sklearn.compose import ColumnTransformer
+
+from sklearn.pipeline import Pipeline
+
+from sklearn.preprocessing import OneHotEncoder
+
+
+from sklearn.ensemble import RandomForestRegressor
+
+
+from sklearn.metrics import (
+
+    r2_score,
+
+    mean_absolute_error,
+
+    mean_squared_error
+
+)
+
+
+
+# ==========================================================
+# LOAD DATA
+# ==========================================================
+
+
+print("Loading Dataset...")
+
+
+df = pd.read_csv(
+
+    "retail_sales.csv"
+
+)
+
+
+
 print(df.head())
 
 
-# Convert text columns into numbers
-encoder = LabelEncoder()
 
-for col in df.select_dtypes(include="object").columns:
-    df[col] = encoder.fit_transform(df[col].astype(str))
-
-
-# Select input and target
-
-# Change target column automatically
-target = "Total Amount"
-
-X = df.drop(target, axis=1)
-y = df[target]
+# ==========================================================
+# DATA CLEANING
+# ==========================================================
 
 
-# Split data
+df.dropna(
+
+    inplace=True
+
+)
+
+
+
+# ==========================================================
+# DEFINE FEATURES AND TARGET
+# ==========================================================
+
+
+
+X = df.drop(
+
+    "Total Amount",
+
+    axis=1
+
+)
+
+
+
+y = df["Total Amount"]
+
+
+
+
+
+# ==========================================================
+# REMOVE ID / DATE COLUMNS
+# ==========================================================
+
+
+X = X.drop(
+
+    columns=[
+
+        "Transaction ID",
+
+        "Customer ID",
+
+        "Date"
+
+    ],
+
+    errors="ignore"
+
+)
+
+
+
+
+
+# ==========================================================
+# FIND DATA TYPES
+# ==========================================================
+
+
+
+categorical_features = X.select_dtypes(
+
+    include=["object"]
+
+).columns
+
+
+
+numeric_features = X.select_dtypes(
+
+    exclude=["object"]
+
+).columns
+
+
+
+
+
+print(
+
+    "Categorical Columns:",
+
+    list(categorical_features)
+
+)
+
+
+
+print(
+
+    "Numeric Columns:",
+
+    list(numeric_features)
+
+)
+
+
+
+
+
+
+# ==========================================================
+# PREPROCESSING
+# ==========================================================
+
+
+preprocessor = ColumnTransformer(
+
+    transformers=[
+
+
+        (
+
+            "categorical",
+
+            OneHotEncoder(
+
+                handle_unknown="ignore"
+
+            ),
+
+            categorical_features
+
+        )
+
+
+
+    ],
+
+
+    remainder="passthrough"
+
+)
+
+
+
+
+
+# ==========================================================
+# MACHINE LEARNING MODEL
+# ==========================================================
+
+
+rf_model = RandomForestRegressor(
+
+    n_estimators=200,
+
+    random_state=42
+
+)
+
+
+
+
+
+
+# ==========================================================
+# COMPLETE ML PIPELINE
+# ==========================================================
+
+
+pipeline = Pipeline(
+
+    steps=[
+
+
+        (
+
+            "preprocessor",
+
+            preprocessor
+
+        ),
+
+
+
+        (
+
+            "model",
+
+            rf_model
+
+        )
+
+
+
+    ]
+
+)
+
+
+
+
+
+
+# ==========================================================
+# TRAIN TEST SPLIT
+# ==========================================================
+
 
 X_train, X_test, y_train, y_test = train_test_split(
+
     X,
+
     y,
+
     test_size=0.2,
+
     random_state=42
+
 )
 
 
-# Train AI model
 
-model = RandomForestRegressor(
-    n_estimators=200,
-    random_state=42
-)
 
-model.fit(
+
+
+
+# ==========================================================
+# TRAIN MODEL
+# ==========================================================
+
+
+print("\nTraining Model...")
+
+
+pipeline.fit(
+
     X_train,
+
     y_train
+
 )
 
 
-# Test model
 
-prediction = model.predict(X_test)
+
+
+
+# ==========================================================
+# MODEL TESTING
+# ==========================================================
+
+
+prediction = pipeline.predict(
+
+    X_test
+
+)
+
+
+
+
+r2 = r2_score(
+
+    y_test,
+
+    prediction
+
+)
+
+
+mae = mean_absolute_error(
+
+    y_test,
+
+    prediction
+
+)
+
+
+rmse = np.sqrt(
+
+    mean_squared_error(
+
+        y_test,
+
+        prediction
+
+    )
+
+)
+
+
+
+
+
+
+print("\n============================")
+
+print("MODEL PERFORMANCE")
+
+print("============================")
+
 
 print(
-    "Accuracy:",
-    r2_score(y_test, prediction)
+
+"Accuracy (R2 Score):",
+
+round(r2*100,2),
+
+"%"
+
 )
+
 
 print(
-    "Error:",
-    mean_absolute_error(y_test, prediction)
+
+"MAE:",
+
+round(mae,2)
+
 )
 
 
-# Save AI model
+print(
+
+"RMSE:",
+
+round(rmse,2)
+
+)
+
+
+
+
+
+# ==========================================================
+# SAVE MODEL
+# ==========================================================
+
+
 
 joblib.dump(
-    model,
+
+    pipeline,
+
     "NexusAI_Model.pkl"
+
 )
 
 
-print("AI Training Completed Successfully")
-print("Model saved: NexusAI_Model.pkl")
+
+
+print("\n============================")
+
+print("AI MODEL SAVED SUCCESSFULLY")
+
+print("============================")
