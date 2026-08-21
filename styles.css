@@ -1,19 +1,700 @@
+/* =========================================================
+   NEXUSCART AI PRO
+   RESPONSIVE UI
+   Desktop + Tablet + Mobile
+   ========================================================= */
 
-/* NexusCart AI Pro custom CSS
-   Optional: the complete app also contains built-in CSS.
-   Keep this file if you want a separate stylesheet later.
-*/
+/* ---------- GLOBAL ---------- */
 
 .stApp {
     background: #0b1020;
+    color: #f8fafc;
+    font-family: "Inter", "Segoe UI", sans-serif;
 }
+
+.main {
+    padding: 1.5rem 2rem;
+}
+
+.block-container {
+    max-width: 1500px;
+    padding-top: 1.5rem;
+}
+
+/* Hide Streamlit default elements */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header[data-testid="stHeader"] {
+    background: transparent;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+section[data-testid="stSidebar"] {
+    background: #111827;
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+section[data-testid="stSidebar"] > div {
+    padding-top: 1rem;
+}
+
+/* ---------- HEADINGS ---------- */
+
+h1 {
+    font-size: 2.2rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 1.6rem !important;
+    font-weight: 750 !important;
+}
+
+h3 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+}
+
+/* ---------- KPI CARDS ---------- */
 
 .kpi {
+    background: linear-gradient(
+        145deg,
+        #151d33,
+        #10172a
+    );
+
+    border: 1px solid rgba(255,255,255,0.08);
+
     border-radius: 18px;
+
+    padding: 20px;
+
+    min-height: 125px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.25);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
-@media (max-width: 800px) {
+.kpi:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(99,102,241,0.5);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.35);
+}
+
+/* ---------- CARDS ---------- */
+
+.card {
+    background: #111827;
+
+    border: 1px solid rgba(255,255,255,0.07);
+
+    border-radius: 20px;
+
+    padding: 22px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ---------- BUTTONS ---------- */
+
+.stButton > button {
+    border-radius: 12px;
+
+    min-height: 44px;
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    background: #1e293b;
+
+    color: white;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+
+    border-color: #6366f1;
+
+    background: #252f4a;
+}
+
+/* ---------- INPUTS ---------- */
+
+.stTextInput input,
+.stNumberInput input,
+.stDateInput input,
+.stSelectbox div,
+.stMultiSelect div {
+    border-radius: 12px !important;
+}
+
+/* ---------- DATAFRAME ---------- */
+
+[data-testid="stDataFrame"] {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* ---------- CHART CONTAINERS ---------- */
+
+[data-testid="stPlotlyChart"] {
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background: rgba(17,24,39,0.4);
+
+    padding: 5px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+    .main {
+        padding: 1rem 1.2rem;
+    }
+
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    h1 {
+        font-size: 1.9rem !important;
+    }
+
+    .kpi {
+        padding: 16px;
+        min-height: 110px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* ---------- APP ---------- */
+
     .stApp {
+        background: #080d19;
+    }
+
+    .main {
+        padding: 0 !important;
+    }
+
+    .block-container {
+        padding: 0.8rem 0.75rem 90px 0.75rem !important;
+
+        max-width: 100% !important;
+    }
+
+
+    /* ---------- HIDE DESKTOP SIDEBAR ---------- */
+
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+
+
+    /* ---------- HEADER ---------- */
+
+    h1 {
+        font-size: 1.55rem !important;
+
+        line-height: 1.2 !important;
+
+        margin-bottom: 5px !important;
+    }
+
+    h2 {
+        font-size: 1.3rem !important;
+    }
+
+    h3 {
+        font-size: 1.1rem !important;
+    }
+
+
+    /* ---------- KPI GRID ---------- */
+
+    .kpi {
+
+        min-height: 105px;
+
+        padding: 14px;
+
+        border-radius: 16px;
+
+        margin-bottom: 10px;
+
+        box-shadow:
+            0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .kpi:hover {
+        transform: none;
+    }
+
+
+    /* ---------- CARDS ---------- */
+
+    .card {
+
+        border-radius: 16px;
+
+        padding: 15px;
+
+        margin-bottom: 12px;
+    }
+
+
+    /* ---------- CHARTS ---------- */
+
+    [data-testid="stPlotlyChart"] {
+
+        width: 100% !important;
+
         padding: 0;
+
+        margin: 0;
+
+        border-radius: 15px;
+
+        overflow: hidden;
+    }
+
+
+    /* ---------- BUTTONS ---------- */
+
+    .stButton > button {
+
+        width: 100%;
+
+        min-height: 48px;
+
+        border-radius: 13px;
+
+        font-size: 14px;
+    }
+
+
+    /* ---------- INPUTS ---------- */
+
+    .stTextInput input,
+    .stNumberInput input,
+    .stDateInput input {
+
+        min-height: 46px;
+
+        border-radius: 12px !important;
+
+        font-size: 16px !important;
+    }
+
+
+    /* ---------- SELECT BOX ---------- */
+
+    [data-baseweb="select"] {
+
+        min-height: 46px;
+    }
+
+
+    /* ---------- DATAFRAME ---------- */
+
+    [data-testid="stDataFrame"] {
+
+        width: 100% !important;
+
+        overflow-x: auto;
+    }
+
+
+    /* ---------- COLUMNS ---------- */
+
+    [data-testid="column"] {
+
+        width: 100% !important;
+
+        flex: 1 1 100% !important;
+    }
+
+
+    /* ---------- MOBILE BOTTOM NAV ---------- */
+
+    .mobile-bottom-nav {
+
+        position: fixed;
+
+        bottom: 0;
+
+        left: 0;
+
+        right: 0;
+
+        height: 68px;
+
+        background: rgba(15,23,42,0.97);
+
+        backdrop-filter: blur(15px);
+
+        -webkit-backdrop-filter: blur(15px);
+
+        border-top: 1px solid rgba(255,255,255,0.08);
+
+        display: flex;
+
+        justify-content: space-around;
+
+        align-items: center;
+
+        z-index: 999999;
+
+        padding: 5px 8px;
+    }
+
+
+    .mobile-nav-item {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 3px;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        min-width: 55px;
+
+        height: 55px;
+
+        border-radius: 13px;
+    }
+
+
+    .mobile-nav-item.active {
+
+        color: #818cf8;
+
+        background: rgba(99,102,241,0.12);
+    }
+
+
+    .mobile-nav-icon {
+
+        font-size: 20px;
+
+        line-height: 1;
+    }
+
+
+    /* ---------- MOBILE HEADER ---------- */
+
+    .mobile-header {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding: 8px 4px 15px 4px;
+    }
+
+
+    .mobile-brand {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        font-weight: 800;
+
+        font-size: 18px;
+    }
+
+
+    .mobile-logo {
+
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 11px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: linear-gradient(
+            135deg,
+            #6366f1,
+            #8b5cf6
+        );
+
+        font-size: 19px;
+    }
+
+
+    .mobile-profile {
+
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 50%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: #1e293b;
+
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+
+    /* ---------- MOBILE GREETING ---------- */
+
+    .mobile-greeting {
+
+        margin: 4px 0 18px 0;
+    }
+
+
+    .mobile-greeting-small {
+
+        color: #94a3b8;
+
+        font-size: 13px;
+
+        margin-bottom: 3px;
+    }
+
+
+    .mobile-greeting-title {
+
+        font-size: 24px;
+
+        font-weight: 800;
+
+        letter-spacing: -0.5px;
+    }
+
+
+    /* ---------- QUICK ACTIONS ---------- */
+
+    .quick-actions {
+
+        display: flex;
+
+        gap: 9px;
+
+        overflow-x: auto;
+
+        padding-bottom: 8px;
+
+        scrollbar-width: none;
+    }
+
+    .quick-actions::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .quick-action {
+
+        flex: 0 0 auto;
+
+        background: #111827;
+
+        border: 1px solid rgba(255,255,255,0.07);
+
+        border-radius: 14px;
+
+        padding: 10px 14px;
+
+        font-size: 12px;
+
+        font-weight: 600;
+    }
+
+
+    /* ---------- MOBILE SECTION ---------- */
+
+    .mobile-section-title {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin: 18px 2px 10px 2px;
+    }
+
+
+    .mobile-section-title h3 {
+
+        margin: 0;
+
+        font-size: 16px !important;
+    }
+
+
+    .mobile-see-all {
+
+        color: #818cf8;
+
+        font-size: 12px;
+
+        font-weight: 600;
+    }
+
+
+    /* ---------- AI ASSISTANT ---------- */
+
+    .ai-card {
+
+        background:
+            linear-gradient(
+                135deg,
+                #312e81,
+                #1e1b4b
+            );
+
+        border-radius: 18px;
+
+        padding: 18px;
+
+        border: 1px solid rgba(129,140,248,0.25);
+
+        margin-bottom: 15px;
+    }
+
+
+    /* ---------- MOBILE SCROLL ---------- */
+
+    html,
+    body {
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ---------- REMOVE EXCESS SPACING ---------- */
+
+    .element-container {
+
+        margin-bottom: 5px;
+    }
+
+
+    /* ---------- STREAMLIT ALERTS ---------- */
+
+    [data-testid="stAlert"] {
+
+        border-radius: 14px;
+
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .block-container {
+
+        padding-left: 0.6rem !important;
+
+        padding-right: 0.6rem !important;
+    }
+
+    .kpi {
+
+        padding: 11px;
+
+        min-height: 95px;
+    }
+
+    h1 {
+
+        font-size: 1.4rem !important;
+    }
+
+    .mobile-nav-item {
+
+        min-width: 48px;
+
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE TOUCH EXPERIENCE
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    button,
+    input,
+    select,
+    textarea {
+
+        touch-action: manipulation;
+    }
+
+    .stButton > button {
+
+        min-height: 48px;
     }
 }
