@@ -13,6 +13,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
 # ============================================================
 # NEXUSCART AI PRO — COMPLETE SINGLE-FILE DASHBOARD
 # ============================================================
@@ -22,6 +23,15 @@ st.set_page_config(
     page_icon="🛒",
     layout="wide",
     initial_sidebar_state="expanded"
+    st.title("NexusCart AI")
+st.subheader("AI-Powered Retail Sales Analytics Platform")
+
+st.write("""
+NexusCart AI is an AI-powered retail analytics platform
+for sales analysis, customer segmentation, churn prediction,
+sales forecasting, AI prediction, recommendations and
+business insights.
+""")
 )
 
 # ----------------------------- CSS -----------------------------
