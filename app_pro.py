@@ -23,7 +23,9 @@ st.set_page_config(
     page_icon="🛒",
     layout="wide",
     initial_sidebar_state="expanded"
-    st.title("NexusCart AI")
+)
+
+st.title("NexusCart AI")
 st.subheader("AI-Powered Retail Sales Analytics Platform")
 
 st.write("""
@@ -32,7 +34,6 @@ for sales analysis, customer segmentation, churn prediction,
 sales forecasting, AI prediction, recommendations and
 business insights.
 """)
-)
 
 # ----------------------------- CSS -----------------------------
 
